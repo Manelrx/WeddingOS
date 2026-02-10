@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------------------------
+// DOMAIN MODELS
+// --------------------------------------------------------
+
+/// Representa o casamento (tenant do sistema).
+model Wedding {
+  id        String   @id @default(uuid())
+  title     String
+  eventDate DateTime?
+  createdAt DateTime @default(now())
+
+  vendors   Vendor[]
+}
+
+/// Representa um fornecedor do casamento.
+model Vendor {
+  id          String       @id @default(uuid())
+  weddingId   String
+  name        String
+  serviceType String
+  status      VendorStatus
+  createdAt   DateTime     @default(now())
+
+  wedding   Wedding    @relation(fields: [weddingId], references: [id])
+  proposals Proposal[]
+}
+
+/// Representa o evento de upload e análise de uma proposta (PDF).
+/// Não representa o conteúdo final analisado.
+model Proposal {
+  id         String         @id @default(uuid())
+  vendorId   String
+  filePath   String
+  status     ProposalStatus
+  createdAt  DateTime       @default(now())
+  analyzedAt DateTime?
+
+  vendor   Vendor            @relation(fields: [vendorId], references: [id])
+  analysis ProposalAnalysis?
+}
+
+/// Representa o resultado estruturado e imutável retornado pela IA.
+/// Deve existir no máximo um por Proposal.
+model ProposalAnalysis {
+  id           String   @id @default(uuid())
+  proposalId   String   @unique
+  totalValue   Decimal? @db.Decimal(10, 2)
+  paymentTerms String?
+  summary      String
+  clarityScore Int
+  createdAt    DateTime @default(now())
+
+  proposal      Proposal       @relation(fields: [proposalId], references: [id])
+  proposalItems ProposalItem[]
+}
+
+/// Representa itens normalizados da proposta, usados para comparação
+/// e clareza de escopo.
+model ProposalItem {
+  id         String             @id @default(uuid())
+  analysisId String
+  category   String
+  name       String
+  status     ProposalItemStatus
+  notes      String?
+
+  analysis ProposalAnalysis @relation(fields: [analysisId], references: [id])
+}
+
+// --------------------------------------------------------
+// ENUMS
+// --------------------------------------------------------
+
+enum VendorStatus {
+  analyzing
+  negotiating
+  closed
+  discarded
+}
+
+enum ProposalStatus {
+  /// criado após upload
+  PENDING
+  /// análise concluída com sucesso
+  SUCCESS
+  /// erro técnico na análise (PDF ou IA)
+  ERROR
+}
+
+enum ProposalItemStatus {
+  included
+  not_included
+  not_informed
+}
