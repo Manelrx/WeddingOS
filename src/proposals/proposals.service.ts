@@ -14,6 +14,56 @@ export class ProposalsService {
         @InjectQueue('proposal-processing') private proposalQueue: Queue,
     ) { }
 
+    async analyze(proposalId: string) {
+        // 1. Validate Proposal
+        const proposal = await this.prisma.proposal.findUnique({
+            where: { id: proposalId },
+        });
+
+        if (!proposal) {
+            throw new NotFoundException(`Proposal with ID ${proposalId} not found`);
+        }
+
+        // 2. Prevent Duplicate Processing
+        if (proposal.status === 'PROCESSING') {
+            return proposal; // Already processing, idempotent return
+        }
+
+        // 3. Update Status to PROCESSING
+        const updatedProposal = await this.prisma.proposal.update({
+            where: { id: proposalId },
+            data: { status: 'PROCESSING', errorMessage: null },
+        });
+
+        // 4. Enqueue Job
+        const payload: ProposalJobPayload = {
+            proposalId: updatedProposal.id,
+            vendorId: updatedProposal.vendorId,
+            filePath: updatedProposal.filePath,
+            createdAt: updatedProposal.createdAt.toISOString(),
+            version: 'v1',
+        };
+
+        try {
+            await this.proposalQueue.add('process-proposal', payload);
+            this.logger.log(`Enqueued proposal ${proposalId} for re-analysis`);
+        } catch (error) {
+            this.logger.error(`Failed to enqueue proposal ${proposalId}`, error);
+
+            // Revert status on failure
+            await this.prisma.proposal.update({
+                where: { id: proposalId },
+                data: {
+                    status: 'QUEUE_FAILED',
+                    errorMessage: `Failed to enqueue job: ${error.message}`
+                },
+            });
+            throw error;
+        }
+
+        return updatedProposal;
+    }
+
     async create(vendorId: string, file: Express.Multer.File) {
         // 1. Validate Vendor
         const vendor = await this.prisma.vendor.findUnique({
@@ -33,9 +83,14 @@ export class ProposalsService {
         }
 
         // 2. Create Proposal
+        const originalName = file.originalname
+            ? file.originalname.replace(/\.pdf$/i, '')
+            : `Proposta ${new Date().toLocaleDateString('pt-BR')}`;
+
         const proposal = await this.prisma.proposal.create({
             data: {
                 vendorId,
+                name: originalName,
                 filePath: file.path,
                 status: 'PENDING',
             },
@@ -55,10 +110,52 @@ export class ProposalsService {
             this.logger.log(`Enqueued proposal ${proposal.id} for processing`);
         } catch (error) {
             this.logger.error(`Failed to enqueue proposal ${proposal.id}`, error);
-            // Note: We do not fail the request if enqueue fails, but we log it.
-            // In a real scenario, we might want a fallback mechanism.
+
+            // Mark as QUEUE_FAILED in the database
+            await this.prisma.proposal.update({
+                where: { id: proposal.id },
+                data: {
+                    status: 'QUEUE_FAILED',
+                    errorMessage: `Failed to enqueue job: ${error.message}`
+                },
+            });
         }
 
         return proposal;
+    }
+
+    async getProposalFile(id: string) {
+        const proposal = await this.prisma.proposal.findUnique({
+            where: { id },
+        });
+
+        if (!proposal) {
+            throw new NotFoundException(`Proposal with ID ${id} not found`);
+        }
+
+        if (!fs.existsSync(proposal.filePath)) {
+            throw new NotFoundException(`File for proposal ${id} not found on server`);
+        }
+
+        return {
+            path: proposal.filePath,
+            filename: `Proposta-${id.substring(0, 8)}.pdf`,
+            mimeType: 'application/pdf',
+        };
+    }
+
+    async updateName(proposalId: string, name?: string) {
+        const proposal = await this.prisma.proposal.findUnique({
+            where: { id: proposalId },
+        });
+
+        if (!proposal) {
+            throw new NotFoundException(`Proposal with ID ${proposalId} not found`);
+        }
+
+        return this.prisma.proposal.update({
+            where: { id: proposalId },
+            data: { name: name || proposal.name },
+        });
     }
 }

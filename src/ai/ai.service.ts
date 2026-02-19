@@ -1,5 +1,6 @@
 
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AiProvider } from './interfaces/ai-provider.interface';
 import { GeminiProvider } from './providers/gemini.provider';
 import { ProposalAnalysisResult } from './interfaces/proposal-analysis-result.interface';
@@ -10,10 +11,30 @@ export class AiService {
     private readonly provider: AiProvider;
 
     constructor(
-        private readonly geminiProvider: GeminiProvider
+        private readonly configService: ConfigService,
+        private readonly geminiProvider: GeminiProvider,
+        // Future providers can be injected here:
+        // private readonly openAIProvider: OpenAIProvider,
+        // private readonly claudeProvider: ClaudeProvider,
     ) {
-        // Hardcoded provider selection for this phase as per requirements
-        this.provider = this.geminiProvider;
+        const selectedProvider = this.configService.get<string>('AI_PROVIDER', 'gemini');
+
+        switch (selectedProvider) {
+            case 'gemini':
+                this.provider = this.geminiProvider;
+                break;
+            // case 'openai':
+            //     this.provider = this.openAIProvider;
+            //     break;
+            // case 'claude':
+            //     this.provider = this.claudeProvider;
+            //     break;
+            default:
+                this.logger.warn(`Unknown AI_PROVIDER "${selectedProvider}", falling back to Gemini`);
+                this.provider = this.geminiProvider;
+        }
+
+        this.logger.log(`AI Provider initialized: ${this.provider.modelName} (${selectedProvider})`);
     }
 
     /**
@@ -21,7 +42,7 @@ export class AiService {
      */
     async analyzeProposal(filePath: string, proposalId: string): Promise<ProposalAnalysisResult> {
         try {
-            this.logger.log(`Requesting analysis for proposal ${proposalId} using GeminiProvider`);
+            this.logger.log(`Requesting analysis for proposal ${proposalId} using ${this.provider.modelName}`);
             const result = await this.provider.analyzeProposal({ filePath, proposalId });
 
             this.logger.log(`Analysis completed for proposal ${proposalId}`);

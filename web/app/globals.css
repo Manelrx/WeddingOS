@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-navy: var(--navy);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-success: var(--success);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+
+  --radius-xl: var(--radius-xl);
+
+  --shadow-soft: 0 4px 20px -2px rgb(0 0 0 / 0.05);
+
+  /* Stitch Tokens */
+  --color-background-warm: #FAF9F6;
+  --color-background-card: #FFFFFF;
+  --color-accent-gold: #C5A982;
+  --color-accent-gold-dark: #B09268;
+  --color-accent-blue: #EBF1F5;
+  --color-accent-blue-text: #5A7D9A;
+  --color-divider: #EBE8E2;
+  --color-amber-soft: #FDF8F0;
+  --color-amber-border: #F3EBDD;
+  --color-amber-text: #9A805D;
+  --color-amber-icon-bg: #FFF4E3;
+  --color-amber-icon-bg: #FFF4E3;
+
+  /* Fornecedores Screen Tokens */
+  --color-background-cream: #FDFBF7;
+  --color-surface-card: #FFFFFF;
+  --color-text-main: #3D3430;
+  --color-text-muted: #8A817C;
+
+  --color-status-analyzing: #A7BED3;
+  --color-status-negotiating: #9CAF88;
+  --color-status-closed: #C5A96F;
+  --color-status-discarded: #C4C4C4;
+
+  --color-bg-analyzing: #F0F5F9;
+  --color-bg-negotiating: #F2F5EF;
+  --color-bg-closed: #F9F6F0;
+  --color-bg-discarded: #F5F5F5;
+
+  --color-stone-subtle: #E7E5E4;
+
+  /* Vendor Wizard (Stitch) Tokens */
+  --color-ivory: #FDFBF7;
+  --color-champagne: #C7B282;
+  --color-champagne-dark: #B59E6B;
+  --color-gold-primary: #D4AF37;
+  --color-gold-hover: #C5A02F;
+  --color-warm-gray: #4A453C;
+  --color-warm-gray-light: #7D786E;
+  --color-neutral-surface: #F6F4EF;
+
+  --shadow-soft-gold: 0 8px 30px -4px rgba(212, 175, 55, 0.15);
+  --shadow-card-subtle: 0 2px 10px -2px rgba(74, 69, 60, 0.05);
+
+  --radius-2xl: 1.25rem;
+
+  /* Additional Stitch Tokens (Steps 2-4) */
+  --color-beige-soft: #F5F1E8;
+  --color-cream: #F5F2EA;
+
+  --color-taupe: #8B8276;
+  --color-taupe-light: #B0A89E;
+  --color-taupe-200: #E2DAD3;
+  --color-taupe-300: #C9BEB5;
+  --color-taupe-500: #8E8279;
+  --color-taupe-700: #5A524C;
+
+  --color-gold-300: #DCC188;
+  --color-gold-400: #D4AF37;
+  --color-gold-500: #C5A028;
+  --color-gold-600: #A3831D;
+  --color-gold-50: #FDFBF7;
+  /* Approx for lighest gold/ivory mix */
+  --color-gold-100: #F9F5ED;
+
+  --color-gold-dark: #B5922B;
+
+  --color-ivory-50: #FDFBF7;
+  --color-ivory-100: #F9F5ED;
+  --color-ivory-200: #F2EADD;
+  --color-ivory-300: #E8D6C0;
+  --color-ivory-900: #3E3429;
+
+  --color-background-light: #F9F5ED;
+  --color-surface-light: #FFFFFF;
+}
+
+:root {
+  /* Warm Ivory Background */
+  --background: #FDFCF8;
+
+  /* Text Colors */
+  --text-primary: #2C3E50;
+  /* Warm Deep Gray/Navy */
+  --text-secondary: #64748B;
+  /* Soft Muted Gray */
+
+  /* Muted Golden Primary */
+  --primary: #C6A75E;
+  --primary-foreground: #FFFFFF;
+
+  /* Deep Navy Accent */
+  --navy: #1B2A41;
+
+  /* Success Green */
+  --success: #10B981;
+
+  /* Soft Gray Muted */
+  --muted: #E2E8F0;
+
+  /* Card Colors */
+  --card: #FFFFFF;
+
+  /* Border */
+  --border: #F1F5F9;
+
+  /* Radius */
+  --radius-xl: 1rem;
+
+  /* Animation Variables */
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-in: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 3s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbar matching Stitch "no-scrollbar" */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}

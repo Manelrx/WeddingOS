@@ -4,9 +4,9 @@ import { Logger } from '@nestjs/common';
 import { ProposalJobPayload } from '../queue/interfaces/proposal.job';
 import { AiService } from '../ai/ai.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { ProposalStatus, ProposalItemStatus } from '@prisma/client';
+import { ProposalStatus } from '@prisma/client';
 
-@Processor('proposal-processing')
+@Processor('proposal-processing', { concurrency: 5 })
 export class ProposalProcessor extends WorkerHost {
     private readonly logger = new Logger(ProposalProcessor.name);
 
@@ -18,13 +18,16 @@ export class ProposalProcessor extends WorkerHost {
     }
 
     async process(job: Job<ProposalJobPayload>): Promise<any> {
-        this.logger.log(`Processing proposal ${job.data.proposalId} (v${job.data.version})`);
+        const startTime = Date.now();
         const { proposalId } = job.data;
 
+        this.logger.log(`Processing proposal ${proposalId} (v${job.data.version}, attempt ${job.attemptsMade + 1})`);
+
         try {
-            // 1. Fetch Proposal
-            const proposal = await this.prisma.proposal.findUnique({
+            // 1. Fetch & Update Status to PROCESSING
+            const proposal = await this.prisma.proposal.update({
                 where: { id: proposalId },
+                data: { status: ProposalStatus.PROCESSING },
                 include: { vendor: true },
             });
 
@@ -45,84 +48,101 @@ export class ProposalProcessor extends WorkerHost {
 
             // 3. Call AI Service
             this.logger.log(`Calling AI Service for proposal ${proposalId}...`);
-            const analysisResult = await this.aiService.analyzeProposal(proposal.filePath, proposalId);
+            const result = await this.aiService.analyzeProposal(proposal.filePath, proposalId);
 
-            // 4. Handle Success -> Create Records directly in a transaction or sequentially?
-            // The logic: Create ProposalAnalysis -> Create Items -> Update Status
+            const durationMs = Date.now() - startTime;
 
+            // 4. Persistence Transaction (mapping PT-BR fields to DB columns)
             await this.prisma.$transaction(async (tx) => {
-                // Create Analysis
                 const analysis = await tx.proposalAnalysis.create({
                     data: {
                         proposalId: proposal.id,
-                        summary: analysisResult.summary,
-                        totalValue: analysisResult.totalValue ? analysisResult.totalValue : undefined, // Ensure it fits schema
-                        paymentTerms: analysisResult.paymentTerms,
-                        clarityScore: analysisResult.confidenceScore ? Math.round(analysisResult.confidenceScore) : 0,
+                        summary: result.resumo,
+                        totalValue: result.valorTotal != null ? result.valorTotal : undefined,
+                        paymentTerms: result.condicoesPagamento,
+                        clarityScore: result.pontuacaoClareza,
+                        confidenceScore: result.pontuacaoConfianca,
+                        risks: result.riscos as any, // Saving as JSON
+                        strengths: result.pontosFortes as any,
+                        weaknesses: result.pontosFracos as any,
+                        gaps: result.lacunasImportantes as any,
+                        differentiators: result.diferenciais as any,
                     },
                 });
 
-                // Create Items
-                if (analysisResult.items && analysisResult.items.length > 0) {
+                // Create Items (mapping PT-BR fields to DB columns)
+                if (result.itens && result.itens.length > 0) {
                     await tx.proposalItem.createMany({
-                        data: analysisResult.items.map(item => ({
+                        data: result.itens.map(item => ({
                             analysisId: analysis.id,
-                            name: item.name,
-                            category: item.category || 'General',
-                            status: this.mapItemStatus(item.status),
-                            notes: item.notes,
+                            rawText: item.textoOriginal,
+                            normalizedKey: item.chaveNormalizada,
+                            category: item.categoria,
+                            included: item.incluido,
+                            notes: item.observacoes ?? null,
                         })),
                     });
                 }
 
-                // Update Status
+                // Update Proposal metadata
                 await tx.proposal.update({
                     where: { id: proposalId },
                     data: {
                         status: ProposalStatus.SUCCESS,
                         analyzedAt: new Date(),
+                        processedAt: new Date(),
+                        aiModelUsed: result.aiModelUsed,
+                        analysisDurationMs: durationMs,
+                        errorMessage: null,
                     },
                 });
             });
 
-            // Log Risks (Not Persisted)
-            if (analysisResult.risks && analysisResult.risks.length > 0) {
-                this.logger.warn(`Risks identified for proposal ${proposalId}: ${JSON.stringify(analysisResult.risks)}`);
-                // TODO: persist risks when schema evolves
+            // Log risks
+            if (result.riscos && result.riscos.length > 0) {
+                this.logger.warn(`Riscos para proposta ${proposalId}: ${JSON.stringify(result.riscos)}`);
             }
 
-            this.logger.log(`Proposal ${proposalId} processed successfully.`);
-            return { status: 'completed' };
+            this.logger.log(
+                `Proposta ${proposalId} processada em ${durationMs}ms | ` +
+                `modelo=${result.aiModelUsed} | ` +
+                `itens=${result.itens.length} | ` +
+                `riscos=${result.riscos.length} | ` +
+                `clareza=${result.pontuacaoClareza} | ` +
+                `confiança=${result.pontuacaoConfianca} | ` +
+                `arquivo=${result.fileSize}bytes`
+            );
+
+            return { status: 'completed', durationMs, fileSize: result.fileSize };
 
         } catch (error) {
-            this.logger.error(`Error processing proposal ${proposalId}: ${error.message}`, error.stack);
+            const durationMs = Date.now() - startTime;
+            this.logger.error(`Erro ao processar proposta ${proposalId}: ${error.message}`, error.stack);
 
-            // Update Status to ERROR
             try {
                 await this.prisma.proposal.update({
                     where: { id: proposalId },
-                    data: { status: ProposalStatus.ERROR },
+                    data: {
+                        status: ProposalStatus.FAILED,
+                        errorMessage: error.message,
+                        analysisDurationMs: durationMs
+                    },
                 });
             } catch (updateError) {
-                this.logger.error(`Failed to update status to ERROR for proposal ${proposalId}: ${updateError.message}`);
+                this.logger.error(`Falha ao atualizar status para FAILED: ${updateError.message}`);
             }
 
-            throw error; // Let BullMQ handle retry logic or failure
-        }
-    }
-
-    private mapItemStatus(status: string): ProposalItemStatus {
-        switch (status) {
-            case 'included': return ProposalItemStatus.included;
-            case 'not_included': return ProposalItemStatus.not_included;
-            case 'not_informed': return ProposalItemStatus.not_informed;
-            default: return ProposalItemStatus.not_informed;
+            throw error;
         }
     }
 
     @OnWorkerEvent('active')
     onActive(job: Job) {
-        this.logger.log(`Job ${job.id} is active!`);
+        this.logger.log(`Job ${job.id} ativo!`);
+    }
+
+    @OnWorkerEvent('failed')
+    onFailed(job: Job, error: Error) {
+        this.logger.error(`Job ${job.id} falhou após ${job.attemptsMade} tentativas: ${error.message}`);
     }
 }
-

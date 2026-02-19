@@ -6,6 +6,8 @@ import { ProposalsModule } from './proposals/proposals.module';
 import { QueueModule } from './queue/queue.module';
 import { WorkerModule } from './worker/worker.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ComparisonModule } from './comparison/comparison.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 const imports = [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -13,6 +15,8 @@ const imports = [
     WeddingsModule,
     VendorsModule,
     ProposalsModule,
+    ComparisonModule,
+    DashboardModule,
 ];
 
 if (process.env.QUEUE_ENABLED === 'true') {

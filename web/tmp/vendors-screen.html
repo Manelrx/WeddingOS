@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fornecedores - WeddingOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#C5A96F", 
+                        "primary-dark": "#B0955C",
+                        "accent-gold": "#C5A96F",
+                        "background-cream": "#FDFBF7",
+                        "surface-card": "#FFFFFF",
+                        "text-main": "#3D3430",
+                        "text-muted": "#8A817C",
+                        "status-analyzing": "#A7BED3",
+                        "status-negotiating": "#9CAF88",
+                        "status-closed": "#C5A96F",
+                        "status-discarded": "#C4C4C4",
+                        "bg-analyzing": "#F0F5F9",
+                        "bg-negotiating": "#F2F5EF",
+                        "bg-closed": "#F9F6F0",
+                        "bg-discarded": "#F5F5F5",
+                        "rose-accent": "#D68C8C",
+                        "stone-subtle": "#E7E5E4",
+                        "nav-inactive": "#8A817C", 
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem", 
+                        "lg": "1rem", 
+                        "xl": "1.5rem", 
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 30px -8px rgba(197, 169, 111, 0.15)',
+                        'card': '0 4px 24px -6px rgba(61, 52, 48, 0.04)',
+                        'floating': '0 12px 30px -4px rgba(61, 52, 48, 0.12)',
+                        'card-hover': '0 10px 40px -10px rgba(61, 52, 48, 0.08)',
+                        'header': '0 1px 2px rgba(61, 52, 48, 0.03)',
+                        'fab': '0 10px 25px -5px rgba(197, 169, 111, 0.4)',
+                    },
+                    letterSpacing: {
+                        'widest-refined': '0.15em',
+                    },
+                    backgroundImage: {
+                        'gold-gradient': 'linear-gradient(135deg, #D4C092 0%, #C5A96F 100%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-cream font-sans text-text-main min-h-screen relative pb-32">
+<div class="fixed top-0 left-0 w-full bg-background-cream/98 backdrop-blur-xl z-50 border-b border-stone-200/30 shadow-header transition-all duration-300">
+<div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
+<h1 class="text-base font-serif font-bold tracking-widest-refined text-text-main uppercase">WeddingOS</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-text-main hover:bg-stone-100/50 transition-colors relative group">
+<span class="material-icons-round text-[22px] opacity-70 group-hover:opacity-100 transition-opacity">notifications_none</span>
+<span class="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-accent-gold rounded-full ring-2 ring-background-cream"></span>
+</button>
+</div>
+</div>
+<main class="pt-24 px-6 max-w-md mx-auto relative min-h-screen pb-24">
+<header class="mb-6">
+<h2 class="text-4xl font-serif text-text-main mb-2 leading-tight">Fornecedores</h2>
+<p class="text-sm text-text-muted font-normal leading-relaxed">
+            Seu espaço de decisão guiada.
+        </p>
+</header>
+<div class="mb-8 bg-surface-card rounded-2xl p-5 border border-accent-gold/20 shadow-soft relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-accent-gold/10 rounded-full blur-2xl"></div>
+<div class="relative z-10">
+<h3 class="text-lg font-serif font-medium text-text-main mb-2">Olá! Você está indo muito bem no planejamento.</h3>
+<p class="text-sm text-text-muted leading-relaxed">
+            Temos <span class="font-medium text-accent-gold">2 fornecedores</span> em negociação que precisam da sua atenção hoje.
+            </p>
+</div>
+</div>
+<div class="mb-8 relative group z-30">
+<button class="w-full bg-background-cream text-left flex items-center justify-between px-5 py-4 rounded-2xl shadow-sm border border-stone-200/60 hover:border-accent-gold/30 transition-all active:scale-[0.99] outline-none focus:ring-2 focus:ring-accent-gold/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-muted text-xl">filter_list</span>
+<div>
+<span class="block text-[10px] uppercase tracking-wider text-text-muted font-semibold mb-0.5">Filtrar por tipo</span>
+<span class="block text-sm font-medium text-text-main">Todos</span>
+</div>
+</div>
+<span class="material-icons-round text-text-muted transition-transform group-hover:rotate-180">expand_more</span>
+</button>
+<div class="absolute top-full left-0 w-full mt-2 bg-surface-card rounded-xl shadow-floating border border-stone-100 overflow-hidden hidden group-hover:block transition-all z-40">
+<div class="py-1">
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-main font-medium">Todos</span>
+<span class="material-icons-round text-accent-gold text-sm">check</span>
+</a>
+<div class="h-px bg-stone-100 mx-5"></div>
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-muted">Buffet</span>
+</a>
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-muted">Fotografia</span>
+</a>
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-muted">Música</span>
+</a>
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-muted">Local</span>
+</a>
+<a class="flex items-center justify-between px-5 py-3 hover:bg-stone-50 transition-colors" href="#">
+<span class="text-sm text-text-muted">Decoração</span>
+</a>
+</div>
+</div>
+</div>
+<div class="space-y-6 pb-20">
+<div class="bg-surface-card rounded-3xl p-5 shadow-card hover:shadow-card-hover border border-stone-100/80 relative group transition-all duration-300 transform translate-y-0 hover:-translate-y-1">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md ring-1 ring-stone-100">
+<img alt="Elegant garden wedding venue with string lights" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDusaY79YtO8kaqUvSUck371or2G4sRt68aMFGyDjbO_-Hy_HnyjXD4E2rYs2k8OTfc7E1fBC2zdj9WfKIiu9Y1PiDFkz4a95kGYbbw5rorERhiepFgVIuZCh1Z3u8fC_xUeRwW_1C_hgsWqQG9XOIOKwgq2-ahXFgJH9of9hvYDmkR8R1p1o6-1pYyrm_FhU_bNatM15LBKYnH193ei13TT8qud6mEhOapwUBY5P9jgjHHIRc9J7KR2TIKuKNPI54TXf0z5u57Avol"/>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-serif text-text-main leading-tight truncate pr-2">Villa Giardini</h3>
+<p class="text-xs text-text-muted mt-1 font-medium">Local &amp; Cerimônia</p>
+</div>
+<span class="text-sm font-semibold text-text-main whitespace-nowrap">R$ 45.000</span>
+</div>
+</div>
+</div>
+<div class="bg-bg-negotiating rounded-xl p-3 flex items-center justify-between border border-status-negotiating/20">
+<div class="flex items-center gap-2.5">
+<div class="w-2 h-2 rounded-full bg-status-negotiating animate-pulse"></div>
+<span class="text-xs font-semibold text-status-negotiating uppercase tracking-wide">Em negociação</span>
+</div>
+<div class="flex items-center gap-1.5 text-status-negotiating">
+<span class="material-symbols-outlined text-sm">spa</span>
+<span class="text-xs font-medium">Revisar pontos</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-card rounded-3xl p-5 shadow-card border border-stone-100/80 relative group transition-all duration-300">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md ring-1 ring-stone-100">
+<img alt="Gourmet plated wedding dinner dish" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQxkXYlIzunfY4XZhS3IZRdwwCcDMp36B3DHhXQ4Te6XKZGbSuC3ggDrFjHyZR7leIbi_qud4zvrRuWtpjS2DaiNYHhIs2nU5TdDV7Zbsx_-rjyHLzgWw0gvPU9c6TYTbcB_1MQUKkYbRP0zw_AdNyeWkS-wzYZYsjcxwDOoWTysMlICZU9aL9EFJsMHT-ajjhOPRvq0vHm0lKYKf59372re5QhJknfV8RYzHsyKC0U_nqCeoh04CzD8wqSVIalue1EhLwfIgeujrB"/>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-serif text-text-main leading-tight truncate pr-2">Buffet Fasano</h3>
+<p class="text-xs text-text-muted mt-1 font-medium">Gastronomia</p>
+</div>
+<span class="text-sm font-semibold text-text-main whitespace-nowrap">R$ 32.000</span>
+</div>
+</div>
+</div>
+<div class="bg-bg-analyzing rounded-xl p-3 flex items-center justify-between border border-status-analyzing/20">
+<div class="flex items-center gap-2.5">
+<div class="w-2 h-2 rounded-full bg-status-analyzing"></div>
+<span class="text-xs font-semibold text-status-analyzing uppercase tracking-wide">Analisando</span>
+</div>
+<div class="flex items-center gap-1.5 text-status-analyzing/80">
+<span class="material-symbols-outlined text-sm">visibility</span>
+<span class="text-xs font-medium">Agendar visita</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-card rounded-3xl p-5 shadow-card border border-stone-100/80 relative group transition-all duration-300">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md ring-1 ring-stone-100">
+<img alt="Camera lens focusing on blurred background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrZ92TeUQEuisULkw42sDkqLkVvWtx2mbEeIaHxNnZql-fIlihTPDf1Jkl5ElmNGErjRkLS_vOznHmugmsdVRVTZlA5nY4cvK7m4JYgD12W02XH9buU4EL-xzdzOzFsPJXUPKTm0j9EmsU3hzpBtZWDp0XbqNTxiCxA4wyY0lmgMKWGokr-X63VeD8k5-g2JVMjZaZPa7EBoJgEOEwxSuNscXyl7JvNoV0am_VSBgWej1siQXm_AT69aNHkzeFgSPD_IEM-SlCZZsg"/>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-serif text-text-main leading-tight truncate pr-2">Ana Corrie Foto</h3>
+<p class="text-xs text-text-muted mt-1 font-medium">Fotografia</p>
+</div>
+<span class="text-sm font-semibold text-accent-gold whitespace-nowrap">R$ 12.500</span>
+</div>
+</div>
+</div>
+<div class="bg-bg-closed rounded-xl p-3 flex items-center justify-between border border-status-closed/20">
+<div class="flex items-center gap-2.5">
+<div class="w-2 h-2 rounded-full bg-status-closed"></div>
+<span class="text-xs font-semibold text-status-closed uppercase tracking-wide">Fechado</span>
+</div>
+<div class="flex items-center gap-1.5 text-status-closed">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-medium">Contrato assinado</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-card rounded-3xl p-5 shadow-card border border-stone-100/80 relative group transition-all duration-300">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md ring-1 ring-stone-100">
+<img alt="Close up of a beautiful floral wedding arrangement" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjJWsxwVzGpQj8Pu9ejFkIasTIYL7JpiG4Fxi8V8u18o3kf5azmMJkpkkxo8KbfbbL-w0LWFWpR-HaDhn9-Yri9gffKUJnTA_r2L3F3NrQ-W2v632tY91IJ3sVPx3ht02yrWmX8tkR9Ct-UQlP0tOQQn1kJKNwuHmpPnCPtl3VSvpS-RCvJ80RctUUpRLIG2FlKPG8FvrghLt1YCk0XyXrgsZ4bjdDBnFH-nO-YT8iY__KbSO76Wr1yOqYqnYzAg1PaSyWEAgCBo7K"/>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-serif text-text-main leading-tight truncate pr-2">Floricultura Bloom</h3>
+<p class="text-xs text-text-muted mt-1 font-medium">Decoração</p>
+</div>
+<span class="text-sm font-semibold text-text-main whitespace-nowrap">R$ 8.500</span>
+</div>
+</div>
+</div>
+<div class="bg-bg-analyzing rounded-xl p-3 flex items-center justify-between border border-status-analyzing/20">
+<div class="flex items-center gap-2.5">
+<div class="w-2 h-2 rounded-full bg-status-analyzing"></div>
+<span class="text-xs font-semibold text-status-analyzing uppercase tracking-wide">Analisando</span>
+</div>
+<div class="flex items-center gap-1.5 text-status-analyzing/80">
+<span class="material-symbols-outlined text-sm">bubble_chart</span>
+<span class="text-xs font-medium">Comparar opções</span>
+</div>
+</div>
+</div>
+<div class="bg-stone-50 rounded-3xl p-5 shadow-none border border-stone-100/50 relative group opacity-60 hover:opacity-100 transition-all duration-300">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 grayscale opacity-80 border-2 border-stone-100">
+<img alt="Band performing live music at event" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxrqL69JUeO0mxFe6sizCCNlYkx8-kD1XTIoSmMzDvAfwbhKcXm3CKW__uUxTHVGGTIvwCeWb_dt-PLeHe3AMWiTOSJ2e2X3jaf1AY3kp1gkrTwXv9Dvq1_JywVlm2THKRYZbXjj3Aze-JfRc58VneknMZt-p0_huVG7KjvyXS5z7TIi-bg2umLIKG70xSP-CSAAyQFHKsjl-TtWRfrl53jWjvIZhg2FFCwgDfdHjyK4ZoqJUAhbw6bRm3XoHmVCAML4Vj27IEu4EJ"/>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-serif text-text-muted leading-tight truncate pr-2 line-through decoration-stone-300">Banda Soul Music</h3>
+<p class="text-xs text-text-muted mt-1 font-medium">Música</p>
+</div>
+<span class="text-sm font-semibold text-text-muted line-through decoration-stone-300 whitespace-nowrap">R$ 18.000</span>
+</div>
+</div>
+</div>
+<div class="bg-bg-discarded rounded-xl p-3 flex items-center justify-between border border-stone-200">
+<div class="flex items-center gap-2.5">
+<div class="w-2 h-2 rounded-full bg-status-discarded"></div>
+<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Descartado</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted/70">
+<span class="material-symbols-outlined text-sm">archive</span>
+<span class="text-xs font-medium">Arquivado</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-24 right-6 z-40">
+<button class="bg-gold-gradient text-white h-14 pl-5 pr-6 rounded-2xl shadow-fab flex items-center gap-2 font-medium tracking-wide transition-all hover:scale-105 active:scale-95 hover:shadow-lg">
+<span class="material-icons-round text-2xl">add</span>
+            Novo fornecedor
+        </button>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 w-full bg-background-cream/95 backdrop-blur-xl border-t border-stone-100/50 pb-6 pt-3 px-8 z-50">
+<ul class="flex justify-between items-center">
+<li>
+<a class="flex flex-col items-center gap-1.5 text-nav-inactive hover:text-accent-gold transition-colors group" href="#">
+<span class="material-icons-round text-2xl group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-medium tracking-wide">Início</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1.5 text-nav-inactive hover:text-accent-gold transition-colors group" href="#">
+<span class="material-icons-round text-2xl group-hover:scale-110 transition-transform">attach_money</span>
+<span class="text-[10px] font-medium tracking-wide">Orçamento</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1.5 text-accent-gold group" href="#">
+<div class="relative">
+<span class="material-icons-round text-2xl group-hover:scale-110 transition-transform">storefront</span>
+<span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-accent-gold rounded-full ring-2 ring-background-cream"></span>
+</div>
+<span class="text-[10px] font-medium tracking-wide">Fornecedores</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center gap-1.5 text-nav-inactive hover:text-accent-gold transition-colors group" href="#">
+<span class="material-icons-round text-2xl group-hover:scale-110 transition-transform">groups</span>
+<span class="text-[10px] font-medium tracking-wide">Convidados</span>
+</a>
+</li>
+</ul>
+</nav>
+</body></html>

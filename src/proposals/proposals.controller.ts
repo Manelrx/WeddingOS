@@ -1,4 +1,7 @@
-import { Controller, Post, Param, UploadedFile, UseInterceptors, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
+
+import { Controller, Post, Get, Patch, Param, Body, UploadedFile, UseInterceptors, ParseUUIDPipe, BadRequestException, Res, StreamableFile } from '@nestjs/common';
+import { Response } from 'express';
+import * as fs from 'fs';
 import { ProposalsService } from './proposals.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -23,5 +26,36 @@ export class ProposalsController {
             status: proposal.status,
             createdAt: proposal.createdAt,
         };
+    }
+
+    @Post(':proposalId/analyze')
+    async analyzeProposal(@Param('proposalId', ParseUUIDPipe) proposalId: string) {
+        const proposal = await this.proposalsService.analyze(proposalId);
+        return {
+            id: proposal.id,
+            status: proposal.status,
+        };
+    }
+
+    @Get(':id/download')
+    async downloadProposal(@Param('id', ParseUUIDPipe) id: string, @Res({ passthrough: true }) res: Response) {
+        const fileData = await this.proposalsService.getProposalFile(id);
+
+        const file = fs.createReadStream(fileData.path);
+
+        res.set({
+            'Content-Type': fileData.mimeType,
+            'Content-Disposition': `attachment; filename="${fileData.filename}"`,
+        });
+
+        return new StreamableFile(file);
+    }
+
+    @Patch(':proposalId')
+    async updateProposal(
+        @Param('proposalId', ParseUUIDPipe) proposalId: string,
+        @Body() body: { name?: string },
+    ) {
+        return this.proposalsService.updateName(proposalId, body.name);
     }
 }

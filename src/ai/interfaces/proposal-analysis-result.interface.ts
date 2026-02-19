@@ -1,26 +1,49 @@
+export interface ProposalRisco {
+    tipo: 'financeiro' | 'contratual' | 'operacional';
+    descricao: string;
+    severidade: 'baixa' | 'média' | 'alta';
+}
+
+export interface ProposalItem {
+    textoOriginal: string;
+    chaveNormalizada: string;
+    categoria: string;
+    incluido: boolean | null;
+    observacoes?: string | null;
+}
 
 export interface ProposalAnalysisResult {
-    summary: string;
+    resumo: string;
+    valorTotal: number | null;
+    condicoesPagamento: string | null;
 
-    totalValue?: number;
-    paymentTerms?: string;
+    /** Pontuação de clareza (0–100): quão claro e completo o documento é. */
+    pontuacaoClareza: number;
 
-    items: {
-        name: string;
-        category?: string;
-        status: 'included' | 'not_included' | 'not_informed';
-        notes?: string;
-    }[];
+    /** Pontuação de confiança (0–1): quão confiante a IA está na extração. */
+    pontuacaoConfianca: number;
 
-    /**
-     * Risks identified in the proposal.
-     * Note: Currently logged but not persisted to DB.
-     */
-    risks?: string[];
+    /** Riscos tipados e classificados. */
+    riscos: ProposalRisco[];
 
-    /**
-     * Confidence score of the analysis (0-100).
-     * Mapped to ProposalAnalysis.clarityScore in DB.
-     */
-    confidenceScore?: number;
+    /** Itens normalizados para comparação entre propostas. */
+    itens: ProposalItem[];
+
+    /** Pontos fortes destacados (ex: custo-benefício). */
+    pontosFortes?: string[];
+
+    /** Pontos fracos ou limitações (ex: pagamento à vista). */
+    pontosFracos?: string[];
+
+    /** Lacunas de informação importantes. */
+    lacunasImportantes?: string[];
+
+    /** Diferenciais de mercado. */
+    diferenciais?: string[];
+
+    /** Nome do modelo usado (observabilidade). */
+    aiModelUsed?: string;
+
+    /** Tamanho do arquivo processado em bytes (observabilidade). */
+    fileSize?: number;
 }

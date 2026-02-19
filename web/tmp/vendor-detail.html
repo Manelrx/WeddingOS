@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Supplier Decision Hub Detail</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Lato:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+        extend: {
+            colors: {
+                "background-warm": "#FAF9F6",
+                "background-card": "#FFFFFF",
+                "text-primary": "#2D2A26",
+                "text-secondary": "#635F59",
+                "text-muted": "#8C867D",
+                "accent-gold": "#C5A982",
+                "accent-gold-dark": "#B09268",
+                "accent-blue": "#EBF1F5",
+                "accent-blue-text": "#5A7D9A",
+                "divider": "#EBE8E2",
+                "amber-soft": "#FDF8F0",
+                "amber-border": "#F3EBDD",
+                "amber-text": "#9A805D",
+                "amber-icon-bg": "#FFF4E3",
+            },
+            fontFamily: {
+                "serif": ["Playfair Display", "serif"],
+                "sans": ["Lato", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "2xl": "1rem",
+                "3xl": "1.5rem",
+                "full": "9999px"
+            },
+            boxShadow: {
+                "soft": "0 4px 20px -2px rgba(45, 42, 38, 0.04)",
+                "float": "0 10px 30px -4px rgba(45, 42, 38, 0.06)"
+            }
+        },
+        },
+    }
+</script>
+<style>.no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-warm text-text-primary font-sans antialiased min-h-screen flex justify-center">
+<div class="w-full max-w-md bg-background-warm min-h-screen relative flex flex-col shadow-2xl shadow-gray-200/50">
+<header class="sticky top-0 z-50 bg-background-warm/95 backdrop-blur-md border-b border-transparent transition-all duration-300">
+<div class="px-5 h-16 flex items-center justify-between">
+<button class="p-2 -ml-2 rounded-full hover:bg-black/5 transition-colors text-text-secondary">
+<span class="material-icons-round text-2xl">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-lg font-serif font-semibold text-text-primary leading-tight">Villa Giardini</h1>
+<span class="text-[11px] font-sans tracking-widest uppercase text-text-muted mt-0.5">Local da Cerimônia</span>
+</div>
+<button class="p-2 -mr-2 rounded-full hover:bg-black/5 transition-colors text-text-secondary">
+<span class="material-icons-round text-2xl">more_horiz</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-6 pt-6 pb-44 overflow-y-auto no-scrollbar">
+<div class="flex flex-col space-y-6 mb-8">
+<div class="w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden shadow-soft relative group">
+<img alt="Wedding ceremony venue outdoor garden" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Elegant outdoor garden wedding venue with flowers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnhQ2WQkXNa63sz2K9tycwTDi7TvduzRyR4MXEhWOttfoc4dnRv4dCJ4eQSmDzkhZx93jGUdN8KpknTvdX_o469bJyKTiCoXWjKvy-TKTwNyncEOO_VtgcmalxMW1737z0gInM6W96is9BOba04on767QtjpAacJDWU4zzm9VxT3FISGcZEVVH1JnqlhQPqSdesHPrkmIFE9Vdi3av_OT6eY5Rv3qVylbLXATbtGzf_Q65wr_y4oz-EJbBuL95lyN4ha9M3lm1bHtp"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+<div class="flex items-end justify-between px-1">
+<div class="flex flex-col space-y-1">
+<span class="text-xs font-semibold uppercase tracking-wider text-text-secondary">Orçamento Estimado</span>
+<span class="text-[2.5rem] leading-none font-serif text-text-primary">R$ 45.000</span>
+</div>
+<div class="px-4 py-1.5 mb-1 rounded-full bg-accent-blue border border-accent-blue/50">
+<span class="text-xs font-bold tracking-wide text-accent-blue-text uppercase">Analisando</span>
+</div>
+</div>
+</div>
+<div class="h-px bg-divider w-full mb-8 opacity-60"></div>
+<section class="space-y-4 mb-10">
+<h2 class="text-xl font-serif text-text-primary px-1">Proposta</h2>
+<div class="bg-background-card border border-divider rounded-2xl p-4 shadow-soft hover:border-accent-gold/30 transition-all cursor-pointer group flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-background-warm flex items-center justify-center shrink-0 border border-divider group-hover:bg-amber-50 group-hover:border-accent-gold/20 transition-colors">
+<span class="material-icons-round text-text-secondary text-xl group-hover:text-accent-gold transition-colors">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-sans font-medium text-text-primary truncate">Proposta_Villa_Giardini_v2.pdf</h3>
+<p class="text-xs text-text-muted mt-1">Atualizado em 12 Out</p>
+</div>
+<button class="p-2 rounded-full hover:bg-background-warm text-text-secondary hover:text-accent-gold transition-colors">
+<span class="material-icons-round">download</span>
+</button>
+</div>
+</section>
+<section class="space-y-6 mb-10">
+<div class="flex items-center justify-between px-1">
+<h2 class="text-xl font-serif text-text-primary">O que está incluído</h2>
+<span class="text-xs text-text-muted font-medium bg-background-card px-2 py-1 rounded-md border border-divider">12 itens</span>
+</div>
+<div class="bg-background-card rounded-2xl shadow-soft border border-divider overflow-hidden">
+<div class="divide-y divide-divider/60">
+<div class="p-4 flex items-start gap-4 hover:bg-amber-soft/30 transition-colors">
+<div class="mt-0.5 w-5 h-5 rounded-full bg-accent-gold/10 border border-accent-gold flex items-center justify-center shrink-0">
+<span class="material-icons-round text-accent-gold text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<p class="text-[15px] text-text-secondary leading-relaxed font-light">Espaço exclusivo por 8 horas de evento, garantindo privacidade total.</p>
+</div>
+</div>
+<div class="p-4 flex items-start gap-4 hover:bg-amber-soft/30 transition-colors cursor-help group">
+<div class="mt-0.5 w-5 h-5 rounded-full bg-accent-gold/10 border border-accent-gold flex items-center justify-center shrink-0">
+<span class="material-icons-round text-accent-gold text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between gap-2">
+<p class="text-[15px] text-text-secondary leading-relaxed font-light">Mobiliário rústico completo para a recepção.</p>
+<span class="material-icons-round text-accent-gold/60 text-lg -mt-0.5" title="Ver detalhes do mobiliário">info</span>
+</div>
+</div>
+</div>
+<div class="p-4 flex items-start gap-4 hover:bg-amber-soft/30 transition-colors">
+<div class="mt-0.5 w-5 h-5 rounded-full bg-accent-gold/10 border border-accent-gold flex items-center justify-center shrink-0">
+<span class="material-icons-round text-accent-gold text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<p class="text-[15px] text-text-secondary leading-relaxed font-light">Iluminação cênica interna e externa com varal de luzes.</p>
+</div>
+</div>
+<div class="p-4 flex items-start gap-4 hover:bg-amber-soft/30 transition-colors cursor-help group">
+<div class="mt-0.5 w-5 h-5 rounded-full bg-accent-gold/10 border border-accent-gold flex items-center justify-center shrink-0">
+<span class="material-icons-round text-accent-gold text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<div class="flex items-start justify-between gap-2">
+<p class="text-[15px] text-text-secondary leading-relaxed font-light">Gerador de energia em stand-by (150kVA).</p>
+<span class="material-icons-round text-accent-gold/60 text-lg -mt-0.5" title="Detalhes técnicos">info</span>
+</div>
+</div>
+</div>
+<div class="p-4 flex items-start gap-4 hover:bg-amber-soft/30 transition-colors">
+<div class="mt-0.5 w-5 h-5 rounded-full bg-accent-gold/10 border border-accent-gold flex items-center justify-center shrink-0">
+<span class="material-icons-round text-accent-gold text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<p class="text-[15px] text-text-secondary leading-relaxed font-light">Equipe de limpeza e segurança durante todo o evento.</p>
+</div>
+</div>
+</div>
+<div class="bg-background-warm/50 p-3 text-center border-t border-divider cursor-pointer hover:bg-amber-soft transition-colors">
+<span class="text-xs font-medium text-accent-gold-dark uppercase tracking-widest">Ver todos os itens</span>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<h2 class="text-xl font-serif text-text-primary px-1">Pontos de atenção</h2>
+<div class="flex flex-col gap-3">
+<div class="bg-white border border-amber-border rounded-xl p-4 flex gap-4 shadow-sm relative overflow-hidden group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-0 left-0 w-1 h-full bg-amber-text/20 group-hover:bg-amber-text/40 transition-colors"></div>
+<div class="mt-1 w-8 h-8 rounded-lg bg-amber-icon-bg flex items-center justify-center shrink-0 border border-amber-border">
+<span class="material-icons-round text-amber-text text-lg">schedule</span>
+</div>
+<div class="space-y-1.5 flex-1">
+<p class="text-[11px] font-bold text-amber-text tracking-widest uppercase">Restrição de Horário</p>
+<p class="text-[14px] text-text-secondary leading-relaxed font-light">
+                        Para respeitar a vizinhança e a lei do silêncio, o som na área externa precisa ser desligado às 22:00h.
+                    </p>
+</div>
+</div>
+<div class="bg-white border border-amber-border rounded-xl p-4 flex gap-4 shadow-sm relative overflow-hidden group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-0 left-0 w-1 h-full bg-amber-text/20 group-hover:bg-amber-text/40 transition-colors"></div>
+<div class="mt-1 w-8 h-8 rounded-lg bg-amber-icon-bg flex items-center justify-center shrink-0 border border-amber-border">
+<span class="material-icons-round text-amber-text text-lg">bolt</span>
+</div>
+<div class="space-y-1.5 flex-1">
+<p class="text-[11px] font-bold text-amber-text tracking-widest uppercase">Taxa de Gerador</p>
+<p class="text-[14px] text-text-secondary leading-relaxed font-light">
+                        O uso do gerador é cobrado à parte caso o consumo exceda 4 horas contínuas.
+                    </p>
+</div>
+</div>
+<div class="bg-white border border-amber-border rounded-xl p-4 flex gap-4 shadow-sm relative overflow-hidden group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-0 left-0 w-1 h-full bg-amber-text/20 group-hover:bg-amber-text/40 transition-colors"></div>
+<div class="mt-1 w-8 h-8 rounded-lg bg-amber-icon-bg flex items-center justify-center shrink-0 border border-amber-border">
+<span class="material-icons-round text-amber-text text-lg">local_parking</span>
+</div>
+<div class="space-y-1.5 flex-1">
+<p class="text-[11px] font-bold text-amber-text tracking-widest uppercase">Estacionamento Limitado</p>
+<p class="text-[14px] text-text-secondary leading-relaxed font-light">
+                        Capacidade para apenas 20 veículos no local. Sugerimos serviço de valet terceirizado.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<div class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-divider pb-8 pt-6 px-6 z-40 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col gap-3">
+<button class="w-full bg-accent-gold hover:bg-accent-gold-dark text-white font-sans font-medium py-4 rounded-xl shadow-lg shadow-accent-gold/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2 tracking-wide text-[15px]">
+                Avançar para negociação
+            </button>
+<div class="grid grid-cols-2 gap-3">
+<button class="w-full bg-transparent border border-divider text-text-secondary font-medium py-3 rounded-xl hover:bg-background-warm hover:text-text-primary transition-colors active:scale-[0.99] text-sm tracking-wide">
+                    Negociar
+                </button>
+<button class="w-full bg-transparent border border-divider text-text-secondary font-medium py-3 rounded-xl hover:bg-gray-50 hover:text-text-muted transition-colors active:scale-[0.99] text-sm tracking-wide">
+                    Descartar
+                </button>
+</div>
+</div>
+</div>
+</div>
+</body></html>
