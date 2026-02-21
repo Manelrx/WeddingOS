@@ -15,6 +15,7 @@ export class ProposalProcessor extends WorkerHost {
         private readonly prisma: PrismaService,
     ) {
         super();
+        this.logger.warn('ProposalProcessor INITIALIZED! worker-enabled=' + process.env.WORKER_ENABLED);
     }
 
     async process(job: Job<ProposalJobPayload>): Promise<any> {
@@ -47,8 +48,8 @@ export class ProposalProcessor extends WorkerHost {
             }
 
             // 3. Call AI Service
-            this.logger.log(`Calling AI Service for proposal ${proposalId}...`);
-            const result = await this.aiService.analyzeProposal(proposal.filePath, proposalId);
+            this.logger.log(`Calling AI Service for proposal ${proposalId} (context: ${job.data.context || 'none'})...`);
+            const result = await this.aiService.analyzeProposal(proposal.filePath, proposalId, job.data.context);
 
             const durationMs = Date.now() - startTime;
 
@@ -67,6 +68,8 @@ export class ProposalProcessor extends WorkerHost {
                         weaknesses: result.pontosFracos as any,
                         gaps: result.lacunasImportantes as any,
                         differentiators: result.diferenciais as any,
+                        negotiationHighlights: result.negotiationHighlights as any,
+                        contractKeyPoints: result.contractKeyPoints as any,
                     },
                 });
 

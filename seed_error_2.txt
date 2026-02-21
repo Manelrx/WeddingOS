@@ -1,0 +1,108 @@
+﻿node : PrismaClientVali
+dationError: 
+No linha:1 caractere:1
++ node d:\Dev\WeddingOS
+\seed.js 2>&1 | 
+Out-File -FilePath 
+d:\Dev\Weddin ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (PrismaClientV   
+ alidationError: :S    
+tring) [], RemoteE    
+xception
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+Invalid `prisma.wedding
+.create()` invocation 
+in
+d:\Dev\WeddingOS\seed.j
+s:5:42
+
+  2 const prisma = new 
+PrismaClient();
+  3 
+  4 async function 
+main() {
+ÔåÆ 5     const 
+wedding = await 
+prisma.wedding.create({
+          data: {
+            title: 
+"Casamento Teste 
+Local",
+            
+coupleNames: "Demo 
+Casal",
+            eventDate: 
+new Date("2026-10-10T00
+:00:00.000Z"),
+            
+guestCount: 150,
+            
+totalBudget: 100000,
+            vendors: {
+              create: [
+                {
+                  
+name: "Villa Bisutti",
+                  
+serviceType: "Espa├ºo",
+                  
+stage: "CONTRATADO",
+                  
+finalContractValue: 
+25000
+                },
+                {
+                  
+name: "Ana Fotografia",
+                  
+serviceType: 
+"Fot├│grafo",
+                  
+stage: "EM_NEGOCIACAO",
+                  
+estimatedValue: 8000
+                }
+              ]
+            }
+          }
+        })
+
+Invalid value for 
+argument `stage`. 
+Expected VendorStage.
+    at wn (d:\Dev\Weddi
+ngOS\node_modules\@pris
+ma\client\runtime\libra
+ry.js:29:1363)
+    at 
+$n.handleRequestError (
+d:\Dev\WeddingOS\node_m
+odules\@prisma\client\r
+untime\library.js:121:6
+958)
+    at $n.handleAndLogR
+equestError (d:\Dev\Wed
+dingOS\node_modules\@pr
+isma\client\runtime\lib
+rary.js:121:6623)
+    at $n.request (d:\D
+ev\WeddingOS\node_modul
+es\@prisma\client\runti
+me\library.js:121:6307)
+    at async l (d:\Dev\
+WeddingOS\node_modules\
+@prisma\client\runtime\
+library.js:130:9633)
+    at async main (d:\D
+ev\WeddingOS\seed.js:5:
+21) {
+  clientVersion: 
+'5.22.0'
+}

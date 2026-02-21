@@ -1,5 +1,5 @@
 
-import { Controller, Post, Get, Patch, Param, Body, UploadedFile, UseInterceptors, ParseUUIDPipe, BadRequestException, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Param, Body, UploadedFile, UseInterceptors, ParseUUIDPipe, BadRequestException, Res, StreamableFile, Query } from '@nestjs/common';
 import { Response } from 'express';
 import * as fs from 'fs';
 import { ProposalsService } from './proposals.service';
@@ -14,12 +14,13 @@ export class ProposalsController {
     async uploadProposal(
         @Param('vendorId', ParseUUIDPipe) vendorId: string,
         @UploadedFile() file: Express.Multer.File,
+        @Query('context') context?: 'proposal' | 'contract' | 'negotiation'
     ) {
         if (!file) {
             throw new BadRequestException('File is required and must be a PDF');
         }
 
-        const proposal = await this.proposalsService.create(vendorId, file);
+        const proposal = await this.proposalsService.create(vendorId, file, context);
 
         return {
             id: proposal.id,
@@ -29,8 +30,11 @@ export class ProposalsController {
     }
 
     @Post(':proposalId/analyze')
-    async analyzeProposal(@Param('proposalId', ParseUUIDPipe) proposalId: string) {
-        const proposal = await this.proposalsService.analyze(proposalId);
+    async analyzeProposal(
+        @Param('proposalId', ParseUUIDPipe) proposalId: string,
+        @Query('context') context?: 'proposal' | 'contract' | 'negotiation'
+    ) {
+        const proposal = await this.proposalsService.analyze(proposalId, context);
         return {
             id: proposal.id,
             status: proposal.status,

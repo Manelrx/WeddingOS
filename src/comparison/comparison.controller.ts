@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ComparisonService } from './comparison.service';
 import { ComparisonMatrix } from './interfaces/comparison-matrix.interface';
 
@@ -10,7 +10,9 @@ export class ComparisonController {
     async getComparison(
         @Param('weddingId') weddingId: string,
         @Param('serviceType') serviceType: string,
+        @Query('vendorIds') vendorIds?: string,
     ): Promise<ComparisonMatrix> {
-        return this.comparisonService.compare(weddingId, serviceType);
+        const vendorIdArray = vendorIds ? vendorIds.split(',') : undefined;
+        return this.comparisonService.compare(weddingId, serviceType, vendorIdArray);
     }
 }

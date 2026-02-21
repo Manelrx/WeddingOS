@@ -139,7 +139,7 @@ export default function VendorWizard() {
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 flex flex-col relative">
+                <main className="flex-1 flex flex-col relative w-full overflow-hidden">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={step}
@@ -147,7 +147,7 @@ export default function VendorWizard() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="flex-1 flex flex-col"
+                            className="flex-1 flex flex-col min-h-0"
                         >
                             {renderStep()}
                         </motion.div>

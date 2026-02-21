@@ -26,8 +26,8 @@ export function VendorNavbar({ title = "Villa Giardini", subtitle = "Local da Ce
 
     return (
         <header className={cn(
-            "sticky top-0 z-50 transition-all duration-300 border-b",
-            scrolled ? "bg-background-warm/95 backdrop-blur-md border-divider shadow-sm" : "bg-transparent border-transparent"
+            "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+            scrolled ? "bg-background-warm/95 backdrop-blur-md border-divider shadow-sm" : "bg-background-warm border-transparent"
         )}>
             <div className="px-5 h-16 flex items-center justify-between">
                 <button
@@ -37,14 +37,14 @@ export function VendorNavbar({ title = "Villa Giardini", subtitle = "Local da Ce
                     <ArrowLeft className="w-6 h-6" />
                 </button>
 
-                <motion-div
+                <MotionDiv
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: scrolled ? 1 : 0, y: scrolled ? 0 : -10 }}
                     className="flex flex-col items-center"
                 >
                     <h1 className="text-lg font-serif font-semibold text-text-primary leading-tight">{title}</h1>
                     <span className="text-[10px] font-sans tracking-widest uppercase text-text-muted mt-0.5">{subtitle}</span>
-                </motion-div>
+                </MotionDiv>
 
                 <button
                     onClick={onEdit}

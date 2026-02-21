@@ -1,0 +1,395 @@
+﻿docker : time="2026-02-
+20T02:08:48-03:00" 
+level=warning msg="D:\\
+Dev\\WeddingOS\\docker-
+compose.yml: the 
+attribute `version` is 
+obsolete, it will be 
+ignored, please remove 
+it to avoid potential 
+confusion"
+No linha:1 caractere:1
++ docker compose exec 
+api npm run build > 
+build_api_errors.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : 
+NotSpecified    : 
+(time="2026-02-2.    
+..tial confusion":S    
+tring) [], RemoteEx    
+ception
+    + 
+FullyQualifiedErr    
+orId : NativeComman    
+dError
+ 
+
+> wedding-os-backend@0.0.1 build
+> nest build
+
+[96msrc/app.module.ts
+[0m:[93m12[0m:[93m33
+[0m - 
+[91merror[0m[90m 
+TS2307: [0mCannot 
+find module './financia
+l/financial.module' or 
+its corresponding type 
+declarations.
+
+[7m12[0m import { 
+FinancialModule } from 
+'./financial/financial.
+module';
+[7m  [0m [91m       
+                       
+  ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~[0m
+[96msrc/budget/budget.
+service.ts[0m:[93m5[
+0m:[93m23[0m - 
+[91merror[0m[90m 
+TS2305: [0mModule 
+'"@prisma/client"' has 
+no exported member 
+'PaymentStatus'.
+
+[7m5[0m import { 
+VendorStage, 
+PaymentStatus } from 
+'@prisma/client';
+[7m [0m [91m        
+              
+~~~~~~~~~~~~~[0m
+[96msrc/budget/budget.
+service.ts[0m:[93m17
+[0m:[93m25[0m - 
+[91merror[0m[90m 
+TS2353: [0mObject 
+literal may only 
+specify known 
+properties, and 
+'installments' does 
+not exist in type 'Vend
+orInclude<DefaultArgs>'
+.
+
+[7m17[0m             
+            
+installments: {
+[7m  [0m [91m       
+                 
+~~~~~~~~~~~~[0m
+[96msrc/budget/budget.
+service.ts[0m:[93m38
+[0m:[93m44[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'totalBudget' does not 
+exist on type '{ 
+title: string; 
+eventDate: Date; id: 
+string; createdAt: 
+Date; }'.
+
+[7m38[0m         
+const totalBudget = Num
+ber(wedding.totalBudget
+ || 0);
+[7m  [0m [91m       
+                       
+             
+~~~~~~~~~~~[0m
+[96msrc/budget/budget.
+service.ts[0m:[93m73
+[0m:[93m52[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'installment' does not 
+exist on type 
+'PrismaService'.
+
+[7m73[0m         
+const nextInstallments 
+= await this.prisma.ins
+tallment.findMany({
+[7m  [0m [91m       
+                       
+                     
+~~~~~~~~~~~[0m
+[96msrc/vendors/dto/cr
+eate-payment.dto.ts[0m
+:[93m2[0m:[93m10[0m
+ - [91merror[0m[90m 
+TS2305: [0mModule 
+'"@prisma/client"' has 
+no exported member 
+'PaymentMethod'.
+
+[7m2[0m import { 
+PaymentMethod, 
+PaymentStatus } from 
+'@prisma/client';
+[7m [0m [91m        
+ ~~~~~~~~~~~~~[0m
+[96msrc/vendors/dto/cr
+eate-payment.dto.ts[0m
+:[93m2[0m:[93m25[0m
+ - [91merror[0m[90m 
+TS2305: [0mModule 
+'"@prisma/client"' has 
+no exported member 
+'PaymentStatus'.
+
+[7m2[0m import { 
+PaymentMethod, 
+PaymentStatus } from 
+'@prisma/client';
+[7m [0m [91m        
+                
+~~~~~~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m5[0m:[93m10[0m - 
+[91merror[0m[90m 
+TS2305: [0mModule 
+'"@prisma/client"' has 
+no exported member 
+'PaymentStatus'.
+
+[7m5[0m import { 
+PaymentStatus } from 
+'@prisma/client';
+[7m [0m [91m        
+ ~~~~~~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m15[0m:[93m17[0m - 
+[91merror[0m[90m 
+TS2353: [0mObject 
+literal may only 
+specify known 
+properties, and 
+'installments' does 
+not exist in type 'Vend
+orInclude<DefaultArgs>'
+.
+
+[7m15[0m             
+    installments: {
+[7m  [0m [91m       
+         
+~~~~~~~~~~~~[0m
+
+  [96mnode_modules/.pr
+isma/client/index.d.ts
+[0m:[93m3011[0m:[93m
+5[0m
+    [7m3011[0m     
+include?: 
+VendorInclude<ExtArgs> 
+| null
+    [7m    [0m [96m 
+   ~~~~~~~[0m
+    The expected type 
+comes from property 
+'include' which is 
+declared here on type 
+'{ select?: VendorSelec
+t<DefaultArgs>; 
+include?: VendorInclude
+<DefaultArgs>; where: V
+endorWhereUniqueInput; 
+}'
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m30[0m:[93m41[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'remainingBalance' 
+does not exist on type 
+'{ id: string; 
+createdAt: Date; name: 
+string; serviceType: 
+string; stage: 
+VendorStage; notes: 
+string; 
+estimatedValue: 
+Decimal; 
+proposalValidUntil: 
+Date; 
+finalContractValue: 
+Decimal; totalPaid: 
+Decimal; 
+selectedProposalId: 
+string; weddingId: 
+string; }'.
+
+[7m30[0m         
+const remaining = Numbe
+r(vendor.remainingBalan
+ce || 0);
+[7m  [0m [91m       
+                       
+          
+~~~~~~~~~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m40[0m:[93m34[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'installments' does 
+not exist on type '{ 
+id: string; createdAt: 
+Date; name: string; 
+serviceType: string; 
+stage: VendorStage; 
+notes: string; 
+estimatedValue: 
+Decimal; 
+proposalValidUntil: 
+Date; 
+finalContractValue: 
+Decimal; totalPaid: 
+Decimal; 
+selectedProposalId: 
+string; weddingId: 
+string; }'.
+
+[7m40[0m             
+installments: 
+vendor.installments,
+[7m  [0m [91m       
+                       
+   ~~~~~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m43[0m:[93m30[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'payments' does not 
+exist on type '{ id: 
+string; createdAt: 
+Date; name: string; 
+serviceType: string; 
+stage: VendorStage; 
+notes: string; 
+estimatedValue: 
+Decimal; 
+proposalValidUntil: 
+Date; 
+finalContractValue: 
+Decimal; totalPaid: 
+Decimal; 
+selectedProposalId: 
+string; weddingId: 
+string; }'.
+
+[7m43[0m             
+payments: 
+vendor.payments
+[7m  [0m [91m       
+                      
+~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m50[0m:[93m38[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'payment' does not 
+exist on type 'Omit<Pri
+smaClient<PrismaClientO
+ptions, never, 
+DefaultArgs>, "$on" | 
+"$connect" | 
+"$disconnect" | "$use" 
+| "$transaction" | 
+"$extends">'.
+
+[7m50[0m             
+const payment = await 
+tx.payment.create({
+[7m  [0m [91m       
+                       
+       ~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m64[0m:[93m26[0m - 
+[91merror[0m[90m 
+TS2339: [0mProperty 
+'installment' does not 
+exist on type 'Omit<Pri
+smaClient<PrismaClientO
+ptions, never, 
+DefaultArgs>, "$on" | 
+"$connect" | 
+"$disconnect" | "$use" 
+| "$transaction" | 
+"$extends">'.
+
+[7m64[0m             
+    await 
+tx.installment.update({
+[7m  [0m [91m       
+                  
+~~~~~~~~~~~[0m
+[96msrc/vendors/financ
+ial.service.ts[0m:[93
+m85[0m:[93m21[0m - 
+[91merror[0m[90m 
+TS2353: [0mObject 
+literal may only 
+specify known 
+properties, and 
+'remainingBalance' 
+does not exist in type 
+'(Without<VendorUpdateI
+nput, VendorUncheckedUp
+dateInput> & VendorUnch
+eckedUpdateInput) | 
+(Without<...> & 
+VendorUpdateInput)'.
+
+[7m85[0m             
+        
+remainingBalance: 
+newRemaining
+[7m  [0m [91m       
+             
+~~~~~~~~~~~~~~~~[0m
+
+  [96mnode_modules/.pr
+isma/client/index.d.ts
+[0m:[93m3238[0m:[93m
+5[0m
+    [7m3238[0m     
+data: 
+XOR<VendorUpdateInput, 
+VendorUncheckedUpdateIn
+put>
+    [7m    [0m [96m 
+   ~~~~[0m
+    The expected type 
+comes from property 
+'data' which is 
+declared here on type 
+'{ select?: VendorSelec
+t<DefaultArgs>; 
+include?: VendorInclude
+<DefaultArgs>; data: (W
+ithout<VendorUpdateInpu
+t, VendorUncheckedUpdat
+eInput> & VendorUncheck
+edUpdateInput) | 
+(Without<...> & 
+VendorUpdateInput); 
+where: VendorWhereUniqu
+eInput; }'
+
+Found 15 error(s).
+

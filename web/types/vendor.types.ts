@@ -2,6 +2,7 @@ export type VendorStage = "ORCAMENTO" | "NEGOCIACAO" | "CONTRATO_EM_ANALISE" | "
 
 export interface VendorSummary {
     id: string;
+    weddingId: string;
     name: string;
     category: string;
     stage: VendorStage;
@@ -31,6 +32,8 @@ export interface ProposalAnalysis {
     gaps: string[];
     lacunasImportantes?: string[];
     diferenciais: string[];
+    negotiationHighlights?: string[];
+    contractKeyPoints?: string[];
     itens?: {
         textoOriginal: string;
         chaveNormalizada: string;
@@ -54,6 +57,7 @@ export interface Proposal {
     createdAt: string;
     status: string;
     analysis?: ProposalAnalysis | null;
+    errorMessage?: string;
 }
 
 export interface VendorDetail extends VendorSummary {
@@ -61,5 +65,6 @@ export interface VendorDetail extends VendorSummary {
     remainingBalance: number;
     paymentConditions: string;
     proposalValidUntil?: string;
+    selectedProposalId?: string;
     proposals: Proposal[];
 }

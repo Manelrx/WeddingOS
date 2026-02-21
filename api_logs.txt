@@ -1,0 +1,61 @@
+﻿
+> wedding-os-backend@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m10:28:58 PM[0m] Starting compilation in watch mode...
+
+[[90m10:29:15 PM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 35  - [39m02/26/2026, 10:29:19 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+QueueModule INITIALIZED!
+WorkerModule INITIALIZED!
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +116ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMulterModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mQueueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mStorageModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +3ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWeddingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDashboardModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBudgetModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[AiService] [39m[32mAI Provider initialized: gemini-3-flash-preview (gemini)[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAiModule dependencies initialized[39m[38;5;3m +0ms[39m
+[33m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [33m   WARN[39m [38;5;3m[ProposalProcessor] [39m[33mProposalProcessor INITIALIZED! worker-enabled=true[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWorkerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mComparisonModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProposalsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWeddingsController {/weddings}:[39m[38;5;3m +16ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/setup, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/promote, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, DELETE} route[39m[38;5;3m +10ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +8ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mFinancialController {/vendors/:id}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/financial, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/payments, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProposalsController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/proposals, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/download, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mComparisonController {/weddings/:weddingId/comparisons}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/comparisons/:serviceType, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDashboardController {/dashboard}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dashboard/summary/:weddingId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBudgetController {/budget}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/budget/summary/:weddingId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 35  - [39m02/26/2026, 10:29:20 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +182ms[39m
+Application is running on: http://127.0.0.1:3000

@@ -7,99 +7,150 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --------------------------------------------------------
-// DOMAIN MODELS
-// --------------------------------------------------------
-
 /// Representa o casamento (tenant do sistema).
 model Wedding {
-  id        String   @id @default(uuid())
-  title     String
-  eventDate DateTime?
-  createdAt DateTime @default(now())
+  id          String    @id @default(uuid())
+  title       String
+  eventDate   DateTime?
+  totalBudget Decimal?  @default(0) @db.Decimal(10, 2)
+  coupleNames String?
+  guestCount  Int?
+  createdAt   DateTime  @default(now())
+  payments    Payment[]
+  vendors     Vendor[]
+  members     WeddingMember[]
+}
 
-  vendors   Vendor[]
+/// Usuário do sistema (noivos, planejadores, etc)
+model User {
+  id        String          @id @default(uuid())
+  email     String          @unique
+  password  String
+  name      String
+  createdAt DateTime        @default(now())
+  weddings  WeddingMember[]
+}
+
+/// Relacionamento entre Usuário e Casamento com controle de acesso
+model WeddingMember {
+  id        String     @id @default(uuid())
+  userId    String
+  weddingId String
+  role      MemberRole @default(OWNER)
+  createdAt DateTime   @default(now())
+  
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wedding   Wedding    @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weddingId])
 }
 
 /// Representa um fornecedor do casamento.
 model Vendor {
-  id             String       @id @default(uuid())
-  weddingId      String
-  name           String
-  serviceType    String
-  stage          VendorStage  @default(ORCAMENTO)
-  notes          String?
-  estimatedValue Decimal?     @db.Decimal(10, 2)
+  id                 String        @id @default(uuid())
+  weddingId          String
+  name               String
+  serviceType        String
+  stage              VendorStage   @default(ORCAMENTO)
+  notes              String?
+  estimatedValue     Decimal?      @db.Decimal(10, 2)
   proposalValidUntil DateTime?
-  finalContractValue Decimal? @db.Decimal(10, 2)
-  totalPaid      Decimal?     @db.Decimal(10, 2) @default(0)
-  // remainingBalance will be calculated (computed field), not stored.
-  
-  createdAt      DateTime     @default(now())
-
-  wedding   Wedding    @relation(fields: [weddingId], references: [id])
-  proposals Proposal[]
+  finalContractValue Decimal?      @db.Decimal(10, 2)
+  createdAt          DateTime      @default(now())
+  selectedProposalId String?       @unique
+  installments       Installment[]
+  payments           Payment[]
+  proposals          Proposal[]    @relation("VendorProposals")
+  selectedProposal   Proposal?     @relation("SelectedProposal", fields: [selectedProposalId], references: [id])
+  wedding            Wedding       @relation(fields: [weddingId], references: [id])
 }
 
 /// Representa o evento de upload e análise de uma proposta (PDF).
 /// Não representa o conteúdo final analisado.
 model Proposal {
-  id                 String         @id @default(uuid())
+  id                 String            @id @default(uuid())
   vendorId           String
-  name               String         @default("Proposta sem nome")
+  name               String            @default("Proposta sem nome")
   filePath           String
   status             ProposalStatus
-  errorMessage       String?        @db.Text
+  errorMessage       String?
   aiModelUsed        String?
   analysisDurationMs Int?
-  createdAt          DateTime       @default(now())
+  createdAt          DateTime          @default(now())
   analyzedAt         DateTime?
   processedAt        DateTime?
+  vendor             Vendor            @relation("VendorProposals", fields: [vendorId], references: [id], onDelete: Cascade)
+  analysis           ProposalAnalysis?
+  selectedForVendor  Vendor?           @relation("SelectedProposal")
+}
 
-  vendor   Vendor            @relation(fields: [vendorId], references: [id])
-  analysis ProposalAnalysis?
+/// Representa um pagamento realizado ou agendado.
+model Payment {
+  id            String         @id @default(uuid())
+  weddingId     String
+  vendorId      String
+  installmentId String?        @unique
+  amount        Decimal        @db.Decimal(10, 2)
+  dueDate       DateTime
+  paidAt        DateTime
+  paymentMethod PaymentMethod?
+  receiptPath   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  installment   Installment?   @relation(fields: [installmentId], references: [id])
+  vendor        Vendor         @relation(fields: [vendorId], references: [id])
+  wedding       Wedding        @relation(fields: [weddingId], references: [id])
+}
+
+/// Representa uma parcela de um contrato.
+model Installment {
+  id                String    @id @default(uuid())
+  vendorId          String
+  sequenceNumber    Int
+  totalInstallments Int
+  amount            Decimal   @db.Decimal(10, 2)
+  dueDate           DateTime
+  paidAt            DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  vendor            Vendor    @relation(fields: [vendorId], references: [id])
+  payment           Payment?
 }
 
 /// Representa o resultado estruturado e imutável retornado pela IA.
 /// Deve existir no máximo um por Proposal.
 model ProposalAnalysis {
-  id              String   @id @default(uuid())
-  proposalId      String   @unique
-  totalValue      Decimal? @db.Decimal(10, 2)
-  paymentTerms    String?
-  summary         String   @db.Text
-  clarityScore    Int
-  confidenceScore Float    @default(0)
-  
-  risks           Json?    // Array of objects { type, description, severity }
-  strengths       Json?    // Array of strings
-  weaknesses      Json?    // Array of strings
-  gaps            Json?    // Array of strings
-  differentiators Json?    // Array of strings
-
-  createdAt       DateTime @default(now())
-
-  proposal      Proposal       @relation(fields: [proposalId], references: [id])
-  proposalItems ProposalItem[]
+  id                    String         @id @default(uuid())
+  proposalId            String         @unique
+  totalValue            Decimal?       @db.Decimal(10, 2)
+  paymentTerms          String?
+  summary               String
+  clarityScore          Int
+  confidenceScore       Float          @default(0)
+  risks                 Json?
+  strengths             Json?
+  weaknesses            Json?
+  gaps                  Json?
+  differentiators       Json?
+  negotiationHighlights Json?
+  contractKeyPoints     Json?
+  createdAt             DateTime       @default(now())
+  proposal              Proposal       @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  proposalItems         ProposalItem[]
 }
 
 /// Representa itens normalizados da proposta, usados para comparação
 /// entre propostas de diferentes fornecedores.
 model ProposalItem {
-  id            String   @id @default(uuid())
+  id            String           @id @default(uuid())
   analysisId    String
   rawText       String
   normalizedKey String
   category      String
   included      Boolean?
   notes         String?
-
-  analysis ProposalAnalysis @relation(fields: [analysisId], references: [id])
+  analysis      ProposalAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
 }
-
-// --------------------------------------------------------
-// ENUMS
-// --------------------------------------------------------
 
 enum VendorStage {
   ORCAMENTO
@@ -124,4 +175,22 @@ enum ProposalStatus {
   ERROR
 }
 
+enum PaymentStatus {
+  PAGO
+  EM_ABERTO
+  ATRASADO
+}
 
+enum PaymentMethod {
+  PIX
+  TED
+  CARTAO
+  BOLETO
+  OUTRO
+}
+
+enum MemberRole {
+  OWNER
+  EDITOR
+  VIEWER
+}

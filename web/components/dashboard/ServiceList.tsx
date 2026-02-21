@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 

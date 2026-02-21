@@ -1,0 +1,50 @@
+# WeddingOS - AI Developer & Agent Guidelines (.cursorrules)
+
+You are an expert AI software engineer assisting in the development of **WeddingOS**.
+WeddingOS is a **private, single-tenant decision support system** for couples planning a wedding. It is **NOT** a marketplace. It uses AI to read unstructured vendor PDFs (contracts/proposals) and turns them into mathematically comparable JSON data to aid human decision-making.
+
+## 🏛️ Application Architecture & Stack
+
+### 1. Backend (`/src`)
+- **Framework**: NestJS (Strict Modular MVC).
+- **Language**: TypeScript (Strict mode enabled).
+- **Database**: PostgreSQL 15+ accessed via **Prisma ORM** (`/prisma/schema.prisma`).
+- **Async Queue**: BullMQ over Redis.
+- **AI Integration**: Google GenAI SDK (`gemini-3-flash-preview` and `gemini-3-pro`) enforcing Structured Outputs via `Zod`.
+
+### 2. Frontend (`/web`)
+- **Framework**: Next.js 15 (App Router).
+- **Styling**: Tailwind CSS.
+- **Animations**: Framer Motion.
+- **Architecture**: Heavily relies on Server Components for data fetching and Client Components for interaction (modals, forms).
+
+### 3. Infrastructure
+- **Docker**: The entire backend (NestJS API, Postgres, Redis) runs in Docker. The source of truth is `docker-compose.yml`. 
+- Always instruct the user to run backend services via Docker, while the frontend (`/web`) is run locally via `npm run dev`.
+
+---
+
+## 🚫 Critical Rules for AI Agents
+
+1. **NEVER Block the API with LLM Calls**:
+   - Do NOT write direct await calls to AI providers inside NestJS HTTP Controllers. All PDF parsing and heavy AI processing MUST be delegated to BullMQ the `proposal-processing` queue and handled by the `/src/worker`.
+   - The API must always remain responsive and return HTTP 201 when triggering an AI job.
+
+2. **Idempotency & Database State**:
+   - The backend uses logical stages for Vendors (`VendorStage.ORCAMENTO`, `NEGOCIACAO`, `CONTRATO_EM_ANALISE`, `CONTRATADO`).
+   - Any state change that affects finances (e.g., transition to `CONTRATADO` creating `Payment` rows) MUST be wrapped in a `Prisma.$transaction`.
+   - Never assume missing data. If the AI extracts a PDF and a price is missing, `totalValue` MUST be null. Do not hallucinate values.
+
+3. **Frontend Aesthetic & UX Standards**:
+   - WeddingOS is a premium product. DO NOT write unstyled, basic HTML components.
+   - Always utilize Tailwind classes to ensure a "glassmorphism", modern layout (subtle borders, muted backgrounds, distinct primary call-to-actions, rounded corners `rounded-xl` or `rounded-2xl`).
+   - Use `Framer Motion` for page transitions, modal pop-ups, and list reordering. The system must feel alive and high-end.
+
+4. **Multi-Provider AI Fallbacks**:
+   - The codebase supports a multi-provider interface `AiProvider`. If writing an integration for a new AI (e.g., Anthropic or OpenAI), implement it under `/src/ai/providers/` and ensure it maps output back to the strict `ProposalAnalysisResult` interface.
+
+5. **Code Style**:
+   - Do NOT propose "quick hacks" or mock data for production components. Always integrate with the real PostgreSQL DB via Prisma.
+   - Follow NestJS injection rules. Do not instantiate classes with `new` manually if they belong to the DI container.
+
+**Context awareness**: If you are asked to fix a bug or add a feature, first read `docs/manual-do-sistema.md` to understand the domain logic flow before changing the codebase.

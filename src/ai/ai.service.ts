@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { AiProvider } from './interfaces/ai-provider.interface';
 import { GeminiProvider } from './providers/gemini.provider';
 import { ProposalAnalysisResult } from './interfaces/proposal-analysis-result.interface';
+import { AiComparisonResult } from './interfaces/ai-comparison-result.interface';
 
 @Injectable()
 export class AiService {
@@ -40,15 +41,30 @@ export class AiService {
     /**
      * Orchestrates the proposal analysis using the active provider.
      */
-    async analyzeProposal(filePath: string, proposalId: string): Promise<ProposalAnalysisResult> {
+    async analyzeProposal(filePath: string, proposalId: string, context?: 'proposal' | 'contract' | 'negotiation'): Promise<ProposalAnalysisResult> {
         try {
-            this.logger.log(`Requesting analysis for proposal ${proposalId} using ${this.provider.modelName}`);
-            const result = await this.provider.analyzeProposal({ filePath, proposalId });
+            this.logger.log(`Requesting analysis for proposal ${proposalId} using ${this.provider.modelName} (context: ${context || 'default'})`);
+            const result = await this.provider.analyzeProposal({ filePath, proposalId, context });
 
             this.logger.log(`Analysis completed for proposal ${proposalId}`);
             return result;
         } catch (error) {
             this.logger.error(`Failed to analyze proposal ${proposalId}: ${error.message}`);
+            throw error;
+        }
+    }
+
+    /**
+     * Orchestrates the comparison of multiple proposals.
+     */
+    async compareProposals(analyses: ProposalAnalysisResult[]): Promise<AiComparisonResult> {
+        try {
+            this.logger.log(`Requesting comparison for ${analyses.length} analyses using ${this.provider.modelName}`);
+            const result = await this.provider.compareProposals(analyses);
+            this.logger.log(`Comparison completed`);
+            return result;
+        } catch (error) {
+            this.logger.error(`Failed to compare proposals: ${error.message}`);
             throw error;
         }
     }

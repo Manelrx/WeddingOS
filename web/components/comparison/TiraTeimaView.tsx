@@ -1,7 +1,7 @@
 import { ComparisonMatrix } from "@/app/types/comparison";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { Check, X, HelpCircle, AlertCircle } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 
 interface TiraTeimaViewProps {
     data: ComparisonMatrix;

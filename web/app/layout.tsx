@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google';
 import './globals.css';
+import { Toaster } from 'sonner';
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body className={`${jakarta.variable} ${playfair.variable} font-sans bg-background text-text-primary antialiased`}>
         <main className="mx-auto max-w-md min-h-screen bg-background shadow-2xl overflow-x-hidden relative">
           {children}
+          <Toaster richColors position="top-right" />
         </main>
       </body>
     </html>

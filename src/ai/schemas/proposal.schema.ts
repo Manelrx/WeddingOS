@@ -25,9 +25,7 @@ export const ProposalRiskSchema = z.object({
 // --- Item Schema (com normalização PT-BR) ---
 export const ProposalItemSchema = z.object({
     textoOriginal: z.string().min(1),
-    chaveNormalizada: z.string().min(1).refine(val => val === val.toLowerCase(), {
-        message: 'chaveNormalizada deve ser minúscula',
-    }),
+    chaveNormalizada: z.string().min(1).transform(val => val.toLowerCase()),
     categoria: z.enum(CATEGORIAS_PERMITIDAS),
     incluido: z.boolean().nullable(),
     observacoes: z.string().nullable().optional(),
@@ -42,6 +40,12 @@ export const ProposalAnalysisSchema = z.object({
     pontuacaoConfianca: z.number().min(0).max(1),
     riscos: z.array(ProposalRiskSchema),
     itens: z.array(ProposalItemSchema),
+    pontosFortes: z.array(z.string()).optional(),
+    pontosFracos: z.array(z.string()).optional(),
+    lacunasImportantes: z.array(z.string()).optional(),
+    diferenciais: z.array(z.string()).optional(),
+    negotiationHighlights: z.array(z.string()).optional().nullable(),
+    contractKeyPoints: z.array(z.string()).optional().nullable(),
 });
 
 export type ValidatedProposalAnalysis = z.infer<typeof ProposalAnalysisSchema>;

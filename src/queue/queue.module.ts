@@ -23,4 +23,8 @@ import { BullModule } from '@nestjs/bullmq';
     ],
     exports: [BullModule],
 })
-export class QueueModule { }
+export class QueueModule {
+    constructor() {
+        console.log('QueueModule INITIALIZED!');
+    }
+}

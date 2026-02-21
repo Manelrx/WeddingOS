@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import { AiProvider } from '../interfaces/ai-provider.interface';
 import { ProposalAnalysisResult } from '../interfaces/proposal-analysis-result.interface';
+import { AiComparisonResult } from '../interfaces/ai-comparison-result.interface';
 import { IStorageProvider } from '../../storage/storage.interface';
 import { ProposalAnalysisSchema } from '../schemas/proposal.schema';
 
@@ -29,110 +30,92 @@ export class GeminiProvider implements AiProvider {
     /**
      * Instrução de sistema em português brasileiro com regras determinísticas.
      */
-    private buildPrompt(): string {
-        return `Você é o Analisador de Propostas do WeddingOS, um motor determinístico de extração de dados.
-Sua tarefa é extrair dados estruturados de um PDF de proposta de fornecedor de casamento.
+    /**
+     * Instrução de sistema em português brasileiro com regras determinísticas.
+     */
+    private buildPrompt(context: 'proposal' | 'contract' | 'negotiation' = 'proposal'): string {
+        const isContract = context === 'contract';
+        const isNegotiation = context === 'negotiation';
+
+        return `Você é o ${isContract ? 'Advogado Especialista em Contratos de Casamento' : isNegotiation ? 'Estrategista Sênior de Negociação de Eventos' : 'Analisador de Propostas de Casamento'} do WeddingOS.
+Sua tarefa é extrair dados estruturados de um ${isContract ? 'contrato ou minuta contratual' : 'PDF de proposta'} de fornecedor de casamento${isNegotiation ? ' com foco TOTAL em encontrar oportunidades de economia e melhoria de termos' : ''}.
 
 ## REGRAS ABSOLUTAS
 
 1. NUNCA assuma, infira ou estime qualquer dado. Extraia APENAS o que está explicitamente escrito.
 2. Se um valor não estiver explicitamente declarado no documento, retorne null. NÃO adivinhe.
 3. Retorne APENAS JSON válido. Sem markdown, sem explicações, sem comentários fora do JSON.
-4. Separe extração factual de interpretação. Fatos vão nos itens. Interpretação vai nos riscos.
-5. Retorne o JSON exclusivamente em português. Não utilize termos em inglês.
-6. Não traduza nomes próprios ou marcas (ex: "Heineken", "Red Label" mantêm-se como estão).
-7. Não converta valores monetários para outra moeda. Mantenha o valor original em reais (BRL).
-8. Considere o contexto jurídico brasileiro ao classificar riscos contratuais.
+4. Separe extração factual de interpretação. Fatos vão nos itens. Interpretação vai nos riscos/estratégias.
+5. Retorne o JSON exclusivamente em português.
+6. Não converta valores monetários.
+
+## INSTRUÇÕES POR CONTEXTO
+
+**CONTEXTO ATUAL: ${context.toUpperCase()}**
+
+${isContract ? `
+- Foco: Segurança jurídica, multas abusivas, prazos de entrega e cancelamento.
+- Identifique cláusulas leoninas (que favorecem apenas o fornecedor).
+- Verifique se há menção explícita a data, horário e local.
+` : isNegotiation ? `
+- Foco: CUSTO-BENEFÍCIO e ALAVANCAS DE NEGOCIAÇÃO.
+- Identifique condições de pagamento que podem ser melhoradas (ex: desconto à vista).
+- Aponte itens que geralmente são cortesias em outros fornecedores.
+- Critique prazos de validade da proposta muito curtos (pressão de venda).
+` : `
+- Foco: Clareza do escopo e valores.
+- Liste exatamente o que está incluso e o que não está.
+`}
 
 ## INSTRUÇÕES DE EXTRAÇÃO
 
 ### resumo
-Escreva um resumo factual de 2-3 frases sobre o que esta proposta oferece. NÃO editorialize.
+${isContract
+                ? 'Resumo JURÍDICO: Objeto, obrigações principais, prazos de entrega e condições de rescisão.'
+                : isNegotiation
+                    ? 'Resumo ESTRATÉGICO: Avaliação direta do "poder de barganha". O fornecedor parece flexível? O preço está alinhado ao mercado (baseado no que consta no doc)?'
+                    : 'Resumo FATUAL: O que está sendo ofertado, para qual data e o valor total.'}
 
 ### valorTotal
-Extraia o valor monetário total como número (ex: 15000.00).
-- Se existirem múltiplos pacotes, use o mais proeminentemente apresentado.
-- Se nenhum valor total estiver explicitamente declarado, retorne null.
-- NÃO some itens individuais para estimar um total.
+Extraia o valor monetário total como número.
 
 ### condicoesPagamento
-Extraia as condições de pagamento exatamente como descritas (ex: "50% na assinatura, 50% 30 dias antes do evento").
-- Se não houver condições de pagamento mencionadas, retorne null.
+Extraia as condições de pagamento, datas de vencimento e multas.
 
 ### pontuacaoClareza (0–100)
-Avalie quão claro, completo e sem ambiguidades o documento é:
-- 90-100: Todos os itens, preços, termos e condições estão explicitamente declarados.
-- 70-89: A maioria das informações está clara, lacunas menores.
-- 50-69: Várias ambiguidades ou detalhes ausentes.
-- 0-49: Muito vago, faltando informações críticas.
+Avalie quão claro e completo é o documento para o objetivo atual (${context}).
 
 ### pontuacaoConfianca (0–1)
-Avalie SUA confiança na precisão da sua própria extração:
-- 0.9-1.0: Todos os dados extraídos são claramente legíveis e sem ambiguidades.
-- 0.7-0.89: A maioria dos dados é clara, alguns campos exigiram interpretação.
-- 0.5-0.69: Documento parcialmente ilegível, alguns campos podem estar imprecisos.
-- 0.0-0.49: Documento muito difícil de ler ou majoritariamente ilegível.
+Sua confiança na extração dos dados.
 
 ### riscos
-Classifique cada risco em exatamente um dos três tipos:
-- "financeiro": Custos ocultos, ambiguidade de preço, breakdown ausente.
-- "contratual": Termos vagos de cancelamento, responsabilidades indefinidas, prazos ausentes.
-- "operacional": Lacunas logísticas, entrega indefinida, cronograma ausente.
+Classifique cada risco em:
+- "financeiro": ${isContract ? 'Multas > 30% contrato, juros abusivos.' : 'Custos extras não inclusos, taxas de deslocamento.'}
+- "contratual": ${isContract ? 'Rescisão sem devolução, ausência de responsabilidade civil.' : 'Termos vagos como "a combinar".'}
+- "operacional": Horas extras, alimentação da equipe.
 
-Severidade:
-- "baixa": Inconveniência menor, facilmente resolvível.
-- "média": Pode causar disputas ou custos inesperados.
-- "alta": Exposição financeira ou legal significativa.
-
-IMPORTANTE: Detecte linguagem contratual vaga. Se encontrar termos como:
-- "a combinar"
-- "conforme disponibilidade"
-- "poderá ser ajustado"
-- "sujeito a alteração"
-- "valores estimados"
-- "sob consulta"
-
-Você DEVE adicionar um risco do tipo "contratual" com severidade "média" descrevendo a ambiguidade encontrada.
+Severidade (baixa/média/alta).
 
 ### itens
-Para cada item ou serviço mencionado na proposta:
-- "textoOriginal": O texto exato como aparece no documento (manter nomes próprios e marcas).
-- "chaveNormalizada": Uma chave genérica em minúsculas para comparação entre propostas.
-  Exemplos:
-    "Whisky Red Label" → chaveNormalizada: "whisky"
-    "Cerveja Heineken" → chaveNormalizada: "cerveja"
-    "Mesa de doces finos" → chaveNormalizada: "doces"
-    "DJ com iluminação" → chaveNormalizada: "dj"
-    "Buffet completo para 200 pessoas" → chaveNormalizada: "buffet"
-    "Decoração floral premium" → chaveNormalizada: "decoracao"
-    "Fotógrafo + Making of" → chaveNormalizada: "fotografia"
-    "Filmagem aérea com drone" → chaveNormalizada: "filmagem"
-    "Mestre de cerimônia" → chaveNormalizada: "cerimonial"
-    "Salão de festas" → chaveNormalizada: "espaco"
-    "Iluminação cênica" → chaveNormalizada: "iluminacao"
-    "Cadeiras Tiffany" → chaveNormalizada: "mobiliario"
-- "categoria": DEVE ser uma das seguintes categorias controladas:
-    "bebidas", "alimentação", "decoração", "mobiliário", "música",
-    "fotografia", "filmagem", "cerimonial", "espaço", "iluminação", "outros"
-  Se não tiver certeza da categoria, use "outros".
-- "incluido": true se explicitamente incluído, false se explicitamente excluído, null se não claramente declarado.
-- "observacoes": Qualquer detalhe relevante sobre limitações, quantidades ou condições. null se não houver.
+Liste os serviços/produtos contratados.
 
 ### pontosFortes
-Liste 3-5 aspectos positivos que destacam esta proposta (ex: custo-benefício, inclusão de itens premium, flexibilidade).
+${isContract ? 'Cláusulas que protegem os noivos.' : 'Itens de alto valor inclusos, boas condições de parcelamento.'}
 
 ### pontosFracos
-Liste 3-5 aspectos negativos ou limitações (ex: curto prazo de pagamento, taxas extras, ausência de itens comuns).
+${isContract ? 'Cláusulas vagas, multas desproporcionais.' : 'Ausência de itens essenciais, validade curta da proposta.'}
 
-### lacunasImportantes
-Liste informações cruciais que NÃO foram encontradas na proposta (ex: taxa de deslocamento, hora extra, cardápio detalhado).
+### negotiationHighlights
+Liste 3 a 5 pontos que podem ser usados para negociação (ex: descontos, prazos, itens extras), mesmo que não esteja explicitamente em fase de negociação. Se não houver nada óbvio, retorne null.
 
-### diferenciais
-Liste itens ou serviços únicos que este fornecedor oferece comparado à média do mercado.`;
+### contractKeyPoints
+${isContract
+                ? 'OBRIGATÓRIO: Liste 3 a 5 pontos CRÍTICOS para revisão jurídica. Ex: "Cláusula X permite cancelamento unilateral sem multa", "Não há definição de prazo para entrega das fotos".'
+                : 'Deixe vazio ou null.'}`;
     }
 
-    async analyzeProposal(input: { filePath: string; proposalId: string }): Promise<ProposalAnalysisResult> {
-        const { filePath, proposalId } = input;
+    async analyzeProposal(input: { filePath: string; proposalId: string; context?: 'proposal' | 'contract' | 'negotiation' }): Promise<ProposalAnalysisResult> {
+        const { filePath, proposalId, context } = input;
 
         try {
             this.logger.log(`Starting analysis for proposal ${proposalId} with Gemini 3 (${this.modelName})`);
@@ -160,7 +143,7 @@ Liste itens ou serviços únicos que este fornecedor oferece comparado à média
                     },
                 ],
                 config: {
-                    systemInstruction: this.buildPrompt(),
+                    systemInstruction: this.buildPrompt(context),
                     temperature: 1.0,
                     responseMimeType: 'application/json',
                     responseJsonSchema: {
@@ -208,6 +191,8 @@ Liste itens ou serviços únicos que este fornecedor oferece comparado à média
                             pontosFracos: { type: 'array', items: { type: 'string' } },
                             lacunasImportantes: { type: 'array', items: { type: 'string' } },
                             diferenciais: { type: 'array', items: { type: 'string' } },
+                            negotiationHighlights: { type: 'array', items: { type: 'string' }, nullable: true },
+                            contractKeyPoints: { type: 'array', items: { type: 'string' }, nullable: true },
                         },
                         required: [
                             'resumo', 'valorTotal', 'condicoesPagamento', 'pontuacaoClareza',
@@ -238,6 +223,53 @@ Liste itens ou serviços únicos que este fornecedor oferece comparado à média
 
         } catch (error) {
             this.logger.error(`Error analyzing proposal ${proposalId} with Gemini 3: ${error.message}`, error.stack);
+            throw error;
+        }
+    }
+
+    async compareProposals(analyses: ProposalAnalysisResult[]): Promise<AiComparisonResult> {
+        try {
+            this.logger.log(`Comparing ${analyses.length} proposals using ${this.modelName}`);
+
+            const prompt = `Você é um Consultor de Casamentos especializado em análise de propostas.
+            Sua tarefa é comparar as seguintes análises de propostas já extraídas e fornecer um resumo comparativo estratégico.
+
+            ## DADOS PARA COMPARAÇÃO
+            ${JSON.stringify(analyses, null, 2)}
+
+            ## REGRAS
+            1. Analise o custo-benefício relativo entre elas.
+            2. Identifique qual fornecedor parece ser mais transparente e qual possui mais omissões (lacunas).
+            3. Aponte diferenciais críticos que uma tem e a outra não.
+            4. Se houver minutas contratuais misturadas com propostas, trate-as como documentos complementares de um mesmo fornecedor ou compare os riscos jurídicos se forem de fornecedores diferentes.
+            5. Retorne APENAS um JSON em português com o seguinte formato:
+            {
+                "summary": "Texto resumindo a comparação geral (aprox 3-4 frases).",
+                "highlights": ["Ponto principal de destaque 1", "Ponto principal de destaque 2", ...]
+            }
+
+            NÃO adicione explicações ou markdown fora do JSON.`;
+
+            const response = await this.ai.models.generateContent({
+                model: this.modelName,
+                contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                config: {
+                    temperature: 0.7,
+                    responseMimeType: 'application/json',
+                    responseJsonSchema: {
+                        type: 'object',
+                        properties: {
+                            summary: { type: 'string' },
+                            highlights: { type: 'array', items: { type: 'string' } }
+                        },
+                        required: ['summary', 'highlights']
+                    }
+                }
+            });
+
+            return JSON.parse(response.text) as AiComparisonResult;
+        } catch (error) {
+            this.logger.error(`Failed to compare proposals: ${error.message}`);
             throw error;
         }
     }

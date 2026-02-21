@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Filter, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface FilterButtonProps {
     categories?: string[];
@@ -13,6 +14,8 @@ interface FilterButtonProps {
 export function FilterButton({ categories = [], selected = 'Todos', onChange }: FilterButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     // Close on outside click
     useEffect(() => {
@@ -27,6 +30,21 @@ export function FilterButton({ categories = [], selected = 'Todos', onChange }: 
 
     const allCategories = ['Todos', ...categories];
 
+    const handleSelect = (item: string) => {
+        if (onChange) {
+            onChange(item);
+        } else {
+            const params = new URLSearchParams(searchParams.toString());
+            if (item === 'Todos') {
+                params.delete('category');
+            } else {
+                params.set('category', item);
+            }
+            router.push(`?${params.toString()}`);
+        }
+        setIsOpen(false);
+    };
+
     return (
         <div className="mb-8 relative z-30" ref={ref}>
             <button
@@ -40,7 +58,7 @@ export function FilterButton({ categories = [], selected = 'Todos', onChange }: 
                             Filtrar por tipo
                         </span>
                         <span className="block text-sm font-medium text-text-main">
-                            {selected}
+                            {selected || 'Todos'}
                         </span>
                     </div>
                 </div>
@@ -56,17 +74,14 @@ export function FilterButton({ categories = [], selected = 'Todos', onChange }: 
                         {allCategories.map((item) => (
                             <button
                                 key={item}
-                                onClick={() => {
-                                    if (onChange) onChange(item);
-                                    setIsOpen(false);
-                                }}
+                                onClick={() => handleSelect(item)}
                                 className={cn(
                                     "w-full px-5 py-3 hover:bg-stone-50 transition-colors flex items-center justify-between text-left",
-                                    selected === item ? 'text-text-main font-medium' : 'text-text-muted'
+                                    selected === item || (selected === undefined && item === 'Todos') ? 'text-text-main font-medium' : 'text-text-muted'
                                 )}
                             >
-                                <span className="text-sm">{item}</span>
-                                {selected === item && <Check className="w-4 h-4 text-accent-gold" />}
+                                <span className="text-sm capitalize">{item === 'Todos' ? 'Todos' : item}</span>
+                                {(selected === item || (selected === undefined && item === 'Todos')) && <Check className="w-4 h-4 text-accent-gold" />}
                             </button>
                         ))}
                     </div>
