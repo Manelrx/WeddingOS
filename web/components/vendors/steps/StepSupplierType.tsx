@@ -7,18 +7,27 @@ interface StepSupplierTypeProps {
 }
 
 const supplierTypes = [
-    { id: "buffet", label: "Buffet", icon: "restaurant_menu" },
-    { id: "photography", label: "Fotografia", icon: "camera_alt" },
-    { id: "music", label: "Música / DJ", icon: "music_note" },
     { id: "local", label: "Local", icon: "church" },
-    { id: "decoration", label: "Decoração", icon: "yard" }, // 'yard' is closest to TreePalm/Deco in material usually, or 'local_florist'
+    { id: "buffet", label: "Buffet", icon: "restaurant_menu" },
+    { id: "decoration", label: "Decoração", icon: "yard" },
+    { id: "photography", label: "Fotografia", icon: "camera_alt" },
+    { id: "film", label: "Filmagem", icon: "videocam" },
+    { id: "music", label: "Música / DJ", icon: "music_note" },
+    { id: "advisory", label: "Assessoria", icon: "assignment_ind" },
+    { id: "sweets", label: "Doces e Bolos", icon: "cake" },
+    { id: "bar", label: "Bar / Drinks", icon: "local_bar" },
+    { id: "beauty", label: "Beleza / Dia da Noiva", icon: "face" },
+    { id: "attire", label: "Trajes (Noiva/Noivo)", icon: "checkroom" },
+    { id: "invitations", label: "Convites", icon: "mail" },
+    { id: "souvenirs", label: "Lembrancinhas", icon: "card_giftcard" },
+    { id: "transport", label: "Transporte", icon: "directions_car" },
     { id: "other", label: "Outro", icon: "more_horiz" },
 ];
 
 export default function StepSupplierType({ onSelect, selectedType, onNext }: StepSupplierTypeProps) {
     return (
-        <>
-            <div className="flex-1 px-6 overflow-y-auto no-scrollbar">
+        <div className="h-full flex flex-col relative">
+            <div className="flex-1 px-6 overflow-y-auto pb-32">
                 <div className="mt-6 mb-8 text-center sm:text-left">
                     <h1 className="text-2xl sm:text-3xl font-bold text-warm-gray leading-tight mb-3 tracking-tight">
                         Que tipo de fornecedor é esse?
@@ -28,7 +37,7 @@ export default function StepSupplierType({ onSelect, selectedType, onNext }: Ste
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pb-6">
+                <div className="grid grid-cols-2 gap-4">
                     {supplierTypes.map((type) => {
                         const isSelected = selectedType === type.id;
 
@@ -66,18 +75,21 @@ export default function StepSupplierType({ onSelect, selectedType, onNext }: Ste
                     })}
                 </div>
             </div>
-            <div className="p-6 bg-gradient-to-t from-ivory via-ivory to-transparent flex-none z-20">
-                <button
-                    onClick={onNext}
-                    disabled={!selectedType}
-                    className={`w-full font-semibold py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-2 ${!selectedType
-                        ? "bg-warm-gray-light/20 text-warm-gray-light cursor-not-allowed"
-                        : "bg-gold-primary hover:bg-gold-hover text-white shadow-gold-primary/30"
-                        }`}
-                >
-                    Continuar
-                </button>
+
+            <div className="fixed bottom-0 left-0 w-full z-50 pointer-events-none">
+                <div className="w-full max-w-md mx-auto bg-gradient-to-t from-ivory via-ivory/95 to-transparent p-6 pointer-events-auto">
+                    <button
+                        onClick={onNext}
+                        disabled={!selectedType}
+                        className={`w-full font-semibold py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-2 ${!selectedType
+                            ? "bg-warm-gray-light/20 text-warm-gray-light cursor-not-allowed"
+                            : "bg-gold-primary hover:bg-gold-hover text-white shadow-gold-primary/30"
+                            }`}
+                    >
+                        Continuar
+                    </button>
+                </div>
             </div>
-        </>
+        </div>
     );
 }

@@ -3,6 +3,10 @@ export interface ComparisonMatrix {
     serviceType: string;
     criteria: ComparisonCriterion[];
     proposals: ComparedProposal[];
+    aiAnalysis?: {
+        summary: string;
+        highlights: string[];
+    };
 }
 
 export interface ComparisonCriterion {

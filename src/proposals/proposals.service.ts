@@ -14,7 +14,7 @@ export class ProposalsService {
         @InjectQueue('proposal-processing') private proposalQueue: Queue,
     ) { }
 
-    async analyze(proposalId: string) {
+    async analyze(proposalId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
         // 1. Validate Proposal
         const proposal = await this.prisma.proposal.findUnique({
             where: { id: proposalId },
@@ -25,23 +25,37 @@ export class ProposalsService {
         }
 
         // 2. Prevent Duplicate Processing
-        if (proposal.status === 'PROCESSING') {
-            return proposal; // Already processing, idempotent return
-        }
+        // if (proposal.status === 'PROCESSING') {
+        //    return proposal; // Already processing, idempotent return
+        // }
 
-        // 3. Update Status to PROCESSING
+        // 3. Clean up existing analysis for re-run
+        await this.prisma.proposalItem.deleteMany({
+            where: {
+                analysis: {
+                    proposalId: proposalId
+                }
+            }
+        });
+
+        await this.prisma.proposalAnalysis.deleteMany({
+            where: { proposalId },
+        });
+
+        // 4. Update Status to PROCESSING
         const updatedProposal = await this.prisma.proposal.update({
             where: { id: proposalId },
             data: { status: 'PROCESSING', errorMessage: null },
         });
 
-        // 4. Enqueue Job
+        // 5. Enqueue Job
         const payload: ProposalJobPayload = {
             proposalId: updatedProposal.id,
             vendorId: updatedProposal.vendorId,
             filePath: updatedProposal.filePath,
             createdAt: updatedProposal.createdAt.toISOString(),
             version: 'v1',
+            context,
         };
 
         try {
@@ -64,7 +78,7 @@ export class ProposalsService {
         return updatedProposal;
     }
 
-    async create(vendorId: string, file: Express.Multer.File) {
+    async create(vendorId: string, file: Express.Multer.File, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
         // 1. Validate Vendor
         const vendor = await this.prisma.vendor.findUnique({
             where: { id: vendorId },
@@ -103,6 +117,7 @@ export class ProposalsService {
             filePath: proposal.filePath,
             createdAt: proposal.createdAt.toISOString(),
             version: 'v1',
+            context,
         };
 
         try {

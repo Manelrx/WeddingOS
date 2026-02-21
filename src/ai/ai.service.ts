@@ -40,10 +40,10 @@ export class AiService {
     /**
      * Orchestrates the proposal analysis using the active provider.
      */
-    async analyzeProposal(filePath: string, proposalId: string): Promise<ProposalAnalysisResult> {
+    async analyzeProposal(filePath: string, proposalId: string, context?: 'proposal' | 'contract' | 'negotiation'): Promise<ProposalAnalysisResult> {
         try {
-            this.logger.log(`Requesting analysis for proposal ${proposalId} using ${this.provider.modelName}`);
-            const result = await this.provider.analyzeProposal({ filePath, proposalId });
+            this.logger.log(`Requesting analysis for proposal ${proposalId} using ${this.provider.modelName} (context: ${context || 'default'})`);
+            const result = await this.provider.analyzeProposal({ filePath, proposalId, context });
 
             this.logger.log(`Analysis completed for proposal ${proposalId}`);
             return result;

@@ -1,24 +1,25 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Eye, Flower2, CheckCircle, Archive } from 'lucide-react';
+import { Eye, Flower2, CheckCircle, Archive, FileText, Scale } from 'lucide-react';
 import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
-import { VendorSummary } from '@/types/vendor.types';
+import { VendorSummary, VendorStage } from '@/types/vendor.types';
 
-const statusStyles = cva(
+const stageStyles = cva(
     "rounded-xl p-3 flex items-center justify-between border transition-colors",
     {
         variants: {
-            status: {
-                analyzing: "bg-bg-analyzing border-status-analyzing/20 text-status-analyzing",
-                negotiating: "bg-bg-negotiating border-status-negotiating/20 text-status-negotiating",
-                closed: "bg-bg-closed border-status-closed/20 text-status-closed",
-                discarded: "bg-bg-discarded border-stone-200 text-text-muted",
+            stage: {
+                ORCAMENTO: "bg-blue-50 border-blue-100 text-blue-700",
+                NEGOCIACAO: "bg-amber-50 border-amber-100 text-amber-700",
+                CONTRATO_EM_ANALISE: "bg-purple-50 border-purple-100 text-purple-700",
+                CONTRATADO: "bg-emerald-50 border-emerald-100 text-emerald-700",
+                CANCELADO: "bg-gray-50 border-gray-200 text-gray-400",
             },
         },
         defaultVariants: {
-            status: "analyzing",
+            stage: "ORCAMENTO",
         },
     }
 );
@@ -27,37 +28,33 @@ interface VendorListCardProps {
     vendor: VendorSummary;
 }
 
-const statusLabels = {
-    analyzing: "Analisando",
-    negotiating: "Em negociação",
-    closed: "Fechado",
-    discarded: "Descartado"
+const stageLabels: Record<VendorStage, string> = {
+    ORCAMENTO: "Em Análise",
+    NEGOCIACAO: "Em Negociação",
+    CONTRATO_EM_ANALISE: "Contrato em Análise",
+    CONTRATADO: "Contratado",
+    CANCELADO: "Cancelado"
 };
 
-const actionLabels = {
-    analyzing: "Agendar visita",
-    negotiating: "Revisar pontos",
-    closed: "Contrato assinado",
-    discarded: "Arquivado"
+const actionLabels: Record<VendorStage, string> = {
+    ORCAMENTO: "Comparar propostas",
+    NEGOCIACAO: "Ver estratégia",
+    CONTRATO_EM_ANALISE: "Revisar minuta",
+    CONTRATADO: "Ver contrato",
+    CANCELADO: "Ver detalhes"
 };
 
 export function VendorListCard({ vendor }: VendorListCardProps) {
-    const { name, category, totalValue, status } = vendor;
+    const { name, category, totalValue, stage } = vendor;
 
-    // Fallback image based on category if needed, or just a generic placeholder
-    // Since the API doesn't provide an image yet, we might need a deterministic placeholder or keep using random ones for now
-    // For this step, I'll use a placeholder or check if I can get an image. 
-    // The previous code had manual images. I will use a placeholder for now as per instructions "No mock data" - but we need to display SOMETHING.
-    // I'll use a consistent placeholder service or local asset if available.
-    // Retaining random unsplash for visual fidelity as "real data" doesn't have images yet. 
-    // Wait, the prompt says "No mock data". But we don't have images in backend.
-    // I'll use a standard placeholder based on category or name hash to be deterministic.
     const imageSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+
+    const displayValue = totalValue > 0 ? totalValue : (vendor.estimatedValue || 0);
 
     const formattedPrice = new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',
-    }).format(totalValue);
+    }).format(displayValue);
 
     return (
         <Link href={`/fornecedores/${vendor.id}`} className="block bg-surface-card rounded-3xl p-5 shadow-card hover:shadow-card-hover border border-stone-100/80 relative group transition-all duration-300 transform translate-y-0 hover:-translate-y-1 cursor-pointer">
@@ -65,7 +62,7 @@ export function VendorListCard({ vendor }: VendorListCardProps) {
             <div className="flex items-start gap-4 mb-4">
                 <div className={cn(
                     "w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-white shadow-md ring-1 ring-stone-100 relative",
-                    status === 'discarded' && "grayscale opacity-80"
+                    stage === 'CANCELADO' && "grayscale opacity-80"
                 )}>
                     <Image
                         alt={name}
@@ -80,53 +77,55 @@ export function VendorListCard({ vendor }: VendorListCardProps) {
                         <div className="pr-2">
                             <h3 className={cn(
                                 "text-lg font-serif text-text-main leading-tight truncate",
-                                status === 'discarded' ? "text-text-muted line-through decoration-stone-300" : ""
+                                stage === 'CANCELADO' ? "text-text-muted line-through decoration-stone-300" : ""
                             )}>
                                 {name}
                             </h3>
-                            <p className="text-xs text-text-muted mt-1 font-medium">{category}</p>
+                            <p className="text-xs text-text-muted mt-1 font-medium bg-gray-50 inline-block px-2 py-0.5 rounded-full border border-gray-100">
+                                {stageLabels[stage]}
+                            </p>
                         </div>
                         <span className={cn(
                             "text-sm font-semibold whitespace-nowrap",
-                            status === 'closed' ? "text-text-main" :
-                                status === 'discarded' ? "text-text-muted line-through decoration-stone-300" :
-                                    status === 'analyzing' ? "text-primary" : "text-text-main"
+                            stage === 'CONTRATADO' ? "text-emerald-600" :
+                                stage === 'CANCELADO' ? "text-text-muted line-through decoration-stone-300" :
+                                    "text-text-main"
                         )}>
                             {formattedPrice}
                         </span>
                     </div>
+                    <p className="text-xs text-text-muted/60 mt-1 capitalize">{category === 'decoration' ? 'Decoração' : category}</p>
                 </div>
             </div>
 
             {/* Status Bar */}
-            <div className={statusStyles({ status })}>
+            <div className={stageStyles({ stage })}>
                 <div className="flex items-center gap-2.5">
                     <div className={cn(
                         "w-2 h-2 rounded-full",
-                        status === 'analyzing' && "bg-status-analyzing",
-                        status === 'negotiating' && "bg-status-negotiating animate-pulse",
-                        status === 'closed' && "bg-status-closed",
-                        status === 'discarded' && "bg-status-discarded"
+                        stage === 'ORCAMENTO' && "bg-blue-500",
+                        stage === 'NEGOCIACAO' && "bg-amber-500 animate-pulse",
+                        stage === 'CONTRATO_EM_ANALISE' && "bg-purple-500",
+                        stage === 'CONTRATADO' && "bg-emerald-500",
+                        stage === 'CANCELADO' && "bg-gray-400"
                     )} />
                     <span className="text-xs font-semibold uppercase tracking-wide">
-                        {statusLabels[status]}
+                        {stageLabels[stage]}
                     </span>
                 </div>
 
                 <div className={cn(
                     "flex items-center gap-1.5",
-                    status === 'analyzing' && "text-status-analyzing/80",
-                    status === 'negotiating' && "text-status-negotiating",
-                    status === 'closed' && "text-status-closed",
-                    status === 'discarded' && "text-text-muted/70"
+                    "opacity-90"
                 )}>
-                    {status === 'analyzing' && <Eye className="w-4 h-4" />}
-                    {status === 'negotiating' && <Flower2 className="w-4 h-4" />}
-                    {status === 'closed' && <CheckCircle className="w-4 h-4" />}
-                    {status === 'discarded' && <Archive className="w-4 h-4" />}
+                    {stage === 'ORCAMENTO' && <Eye className="w-4 h-4" />}
+                    {stage === 'NEGOCIACAO' && <Flower2 className="w-4 h-4" />}
+                    {stage === 'CONTRATO_EM_ANALISE' && <Scale className="w-4 h-4" />}
+                    {stage === 'CONTRATADO' && <CheckCircle className="w-4 h-4" />}
+                    {stage === 'CANCELADO' && <Archive className="w-4 h-4" />}
 
-                    <span className="text-xs font-medium">
-                        {actionLabels[status]}
+                    <span className="text-xs font-medium hidden sm:inline-block">
+                        {actionLabels[stage]}
                     </span>
                 </div>
             </div>

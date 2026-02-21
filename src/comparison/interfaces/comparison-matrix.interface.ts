@@ -3,6 +3,10 @@ export interface ComparisonMatrix {
     serviceType: string;
     criteria: ComparisonCriterion[];
     proposals: ComparedProposal[];
+    aiAnalysis?: {
+        summary: string;
+        highlights: string[];
+    };
 }
 
 export interface ComparisonCriterion {
@@ -19,7 +23,7 @@ export interface ComparedProposal {
 }
 
 export interface ComparedItem {
-    included: boolean | null; // true=included, false=excluded, null=not mentioned
+    status: 'included' | 'not_included' | 'not_informed';
     notes?: string;
-    rawText?: string;         // Original text from the proposal
+    originalName?: string;         // Original text from the proposal
 }

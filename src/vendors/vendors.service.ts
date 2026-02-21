@@ -4,9 +4,14 @@ import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
 import { VendorStage } from '@prisma/client';
 
+import { ProposalsService } from '../proposals/proposals.service';
+
 @Injectable()
 export class VendorsService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly proposalsService: ProposalsService
+    ) { }
 
     async create(weddingId: string, createVendorDto: CreateVendorDto) {
         try {
@@ -32,10 +37,15 @@ export class VendorsService {
         }
     }
 
-    async findAll(weddingId: string) {
+    async findAll(weddingId: string, serviceType?: string) {
         try {
+            const whereClause: any = { weddingId };
+            if (serviceType) {
+                whereClause.serviceType = serviceType;
+            }
+
             const vendors = await this.prisma.vendor.findMany({
-                where: { weddingId },
+                where: whereClause,
                 include: {
                     proposals: {
                         include: {
@@ -67,7 +77,7 @@ export class VendorsService {
                         name: vendor.name,
                         category: vendor.serviceType,
                         stage: vendor.stage,
-                        totalValue: totalValue,
+                        totalValue: finalValue > 0 ? finalValue : (vendor.estimatedValue ? Number(vendor.estimatedValue) : totalValue),
                         estimatedValue: vendor.estimatedValue ? Number(vendor.estimatedValue) : 0,
                         finalContractValue: finalValue,
                         totalPaid: paid,
@@ -106,6 +116,8 @@ export class VendorsService {
         }
 
         // Logic to get total value from the latest proposal analysis
+        // If selectedProposalId exists, prioritize it for financials?
+        // For now, let's keep latest, but UI might want selected.
         const latestProposal = vendor.proposals?.[0];
         const analysis = latestProposal?.analysis;
 
@@ -128,13 +140,14 @@ export class VendorsService {
             estimatedValue: vendor.estimatedValue ? Number(vendor.estimatedValue) : 0,
 
             // Financials
-            totalValue: totalValue,
+            totalValue: finalContractValue > 0 ? finalContractValue : (vendor.estimatedValue ? Number(vendor.estimatedValue) : totalValue),
             finalContractValue: finalContractValue,
             amountPaid: amountPaid,
             remainingBalance: remainingBalance,
 
             paymentConditions: paymentConditions,
             proposalValidUntil: vendor.proposalValidUntil,
+            selectedProposalId: vendor.selectedProposalId,
 
             proposals: vendor.proposals?.map(p => {
                 const pAnalysis = p.analysis;
@@ -153,6 +166,8 @@ export class VendorsService {
                         weaknesses: (pAnalysis.weaknesses as any) || [],
                         gaps: (pAnalysis.gaps as any) || [],
                         diferenciais: (pAnalysis.differentiators as any) || [],
+                        negotiationHighlights: (pAnalysis.negotiationHighlights as any) || [],
+                        contractKeyPoints: (pAnalysis.contractKeyPoints as any) || [],
                         itens: pAnalysis.proposalItems?.map(item => ({
                             textoOriginal: item.rawText,
                             chaveNormalizada: item.normalizedKey,
@@ -183,5 +198,35 @@ export class VendorsService {
         return this.prisma.vendor.delete({
             where: { id },
         });
+    }
+    async promoteToNegotiation(vendorId: string, proposalId: string) {
+        // 1. Validate
+        const vendor = await this.prisma.vendor.findUnique({
+            where: { id: vendorId },
+            include: { proposals: true }
+        });
+        if (!vendor) throw new NotFoundException(`Vendor ${vendorId} not found`);
+
+        const proposal = vendor.proposals.find(p => p.id === proposalId);
+        if (!proposal) throw new NotFoundException(`Proposal ${proposalId} not found for this vendor`);
+
+        // 2. Update Vendor
+        const updatedVendor = await this.prisma.vendor.update({
+            where: { id: vendorId },
+            data: {
+                stage: VendorStage.NEGOCIACAO,
+                selectedProposalId: proposalId
+            } // We expect the schema update to be active
+        });
+
+        // 3. Trigger Negotiation Analysis
+        // This will re-analyze the PDF with the 'negotiation' context to extract strategy.
+        await this.proposalsService.analyze(proposalId, 'negotiation');
+
+        return updatedVendor;
+    }
+
+    async analyzeProposal(proposalId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
+        return this.proposalsService.analyze(proposalId, context);
     }
 }

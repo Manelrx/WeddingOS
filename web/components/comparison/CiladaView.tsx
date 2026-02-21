@@ -1,7 +1,7 @@
 import { ComparisonMatrix, ComparedItem, ComparisonCriterion } from "@/app/types/comparison";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { AlertTriangle, Copy, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 interface CiladaViewProps {
     data: ComparisonMatrix;

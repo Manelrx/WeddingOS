@@ -10,8 +10,5 @@ export interface AiProvider {
    * @param input Object containing filePath and proposalId
    * @returns Promise resolving to ProposalAnalysisResult
    */
-  analyzeProposal(input: {
-    filePath: string;
-    proposalId: string;
-  }): Promise<ProposalAnalysisResult>;
+  analyzeProposal(input: { filePath: string; proposalId: string; context?: 'proposal' | 'contract' | 'negotiation' }): Promise<ProposalAnalysisResult>;
 }

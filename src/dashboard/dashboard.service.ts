@@ -1,7 +1,7 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { VendorStatus, ProposalStatus } from '@prisma/client';
+import { VendorStage, ProposalStatus } from '@prisma/client';
 
 @Injectable()
 export class DashboardService {
@@ -35,10 +35,15 @@ export class DashboardService {
         // We iterate over vendors. If vendor is closed, we look for a successful proposal.
         // We take the latest successful proposal as the active one.
         for (const vendor of wedding.vendors) {
-            if (vendor.status === VendorStatus.closed) {
-                const activeProposal = vendor.proposals[0]; // Ordered by createdAt desc
-                if (activeProposal && activeProposal.analysis && activeProposal.analysis.totalValue) {
-                    totalCommitted += Number(activeProposal.analysis.totalValue);
+            if (vendor.stage === VendorStage.CONTRATADO) {
+                // Prioritize final contract value if available
+                if (vendor.finalContractValue) {
+                    totalCommitted += Number(vendor.finalContractValue);
+                } else {
+                    const activeProposal = vendor.proposals[0]; // Ordered by createdAt desc
+                    if (activeProposal && activeProposal.analysis && activeProposal.analysis.totalValue) {
+                        totalCommitted += Number(activeProposal.analysis.totalValue);
+                    }
                 }
             }
         }
@@ -46,13 +51,13 @@ export class DashboardService {
         // 2. Identify Open Decisions (Vendors in analyzing or negotiating)
         const openDecisions = wedding.vendors
             .filter(v =>
-                (v.status === VendorStatus.analyzing || v.status === VendorStatus.negotiating)
+                (v.stage === VendorStage.ORCAMENTO || v.stage === VendorStage.NEGOCIACAO || v.stage === VendorStage.CONTRATO_EM_ANALISE)
             )
             .map(v => ({
                 id: v.id,
                 title: v.serviceType, // Using serviceType as title for now, or name
                 description: v.name,
-                status: v.status,
+                status: v.stage,
             }));
 
         // 3. Mocked values for missing data

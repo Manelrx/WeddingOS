@@ -6,19 +6,25 @@ import { ComparisonMatrix, ComparisonCriterion, ComparedProposal, ComparedItem }
 export class ComparisonService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async compare(weddingId: string, serviceType: string): Promise<ComparisonMatrix> {
+    async compare(weddingId: string, serviceType: string, vendorIds?: string[]): Promise<ComparisonMatrix> {
         // 1. Fetch Proposals
-        const proposals = await this.prisma.proposal.findMany({
-            where: {
-                vendor: {
-                    weddingId,
-                    serviceType,
-                },
-                status: 'SUCCESS',
-                analysis: {
-                    isNot: null,
-                },
+        const prismaWhere: any = {
+            vendor: {
+                weddingId,
+                serviceType,
             },
+            status: 'SUCCESS',
+            analysis: {
+                isNot: null,
+            },
+        };
+
+        if (vendorIds && vendorIds.length > 0) {
+            prismaWhere.vendor.id = { in: vendorIds };
+        }
+
+        const proposals = await this.prisma.proposal.findMany({
+            where: prismaWhere,
             include: {
                 vendor: true,
                 analysis: {
@@ -82,15 +88,14 @@ export class ComparisonService {
 
                 if (existingItem) {
                     itemsMap[criterion.key] = {
-                        included: existingItem.included,
-                        notes: existingItem.notes,
-                        rawText: existingItem.rawText,
+                        status: existingItem.included === true ? 'included' : (existingItem.included === false ? 'not_included' : 'not_informed'),
+                        notes: existingItem.notes || undefined,
+                        originalName: existingItem.rawText,
                     };
                 } else {
                     // Item not mentioned in this proposal
                     itemsMap[criterion.key] = {
-                        included: null,
-                        rawText: undefined,
+                        status: 'not_informed',
                     };
                 }
             }
@@ -98,7 +103,7 @@ export class ComparisonService {
             return {
                 proposalId: proposal.id,
                 vendorName: proposal.vendor.name,
-                totalValue: analysis.totalValue?.toNumber() ?? null,
+                totalValue: analysis.totalValue ? Number(analysis.totalValue) : null,
                 items: itemsMap,
             };
         });
@@ -108,6 +113,13 @@ export class ComparisonService {
             serviceType,
             criteria: sortedCriteria,
             proposals: comparedProposals,
+            aiAnalysis: {
+                summary: `Comparação de ${proposals.length} propostas de ${serviceType}.`,
+                highlights: [
+                    `O fornecedor ${comparedProposals[0]?.vendorName} parece ter a proposta mais clara.`,
+                    `Fique atento a itens não informados em ${proposals.length > 1 ? 'alguns fornecedores' : 'esta proposta'}.`
+                ]
+            }
         };
     }
 }

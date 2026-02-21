@@ -11,16 +11,32 @@ import { StageNegociacao } from './stages/StageNegociacao';
 import { StageContratoAnalise } from './stages/StageContratoAnalise';
 import { StageContratado } from './stages/StageContratado';
 import { StageCancelado } from './stages/StageCancelado';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { VendorStageSelector } from './VendorStageSelector';
+import { updateVendor, promoteToNegotiation } from '@/lib/api/vendors.api';
+import { NegotiationConfirmationModal } from './NegotiationConfirmationModal';
+import { toast } from 'sonner';
 
 interface VendorDetailClientProps {
     vendor: VendorDetail;
 }
 
 export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
+    // View Stage State for Navigation (History Mode)
+    const [viewStage, setViewStage] = useState<VendorDetail['stage']>(vendor.stage);
+
+    // Sync viewStage when vendor.stage updates (e.g. after database update)
+    useEffect(() => {
+        setViewStage(vendor.stage);
+    }, [vendor.stage]);
+
     const [selectedProposal, setSelectedProposal] = useState<VendorDetail['proposals'][0] | null>(null);
+    const [negotiationProposalId, setNegotiationProposalId] = useState<string | null>(null); // Track which proposal is being promoted
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [pendingStage, setPendingStage] = useState<VendorDetail['stage'] | null>(null);
+    const [isUpdatingStage, setIsUpdatingStage] = useState(false);
+    const [isPromoting, setIsPromoting] = useState(false); // State for promotion loading
     const router = useRouter();
 
     // Poll for status updates if any proposal is processing
@@ -49,28 +65,36 @@ export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
-            alert('Download iniciado');
+            document.body.removeChild(a);
+            toast.success('Download iniciado com sucesso');
         } catch (error) {
             console.error('Download error:', error);
-            alert('Erro ao baixar proposta');
+            toast.error('Erro ao baixar proposta');
         }
     };
 
     const handleAnalyze = async (proposal: VendorDetail['proposals'][0]) => {
-        try {
-            setIsAnalyzing(true);
-            const response = await fetch(`http://127.0.0.1:3001/vendors/${proposal.id}/analyze`, {
-                method: 'POST',
-            });
-
-            if (!response.ok) throw new Error('Analysis failed');
-
-            alert('Análise iniciada! Acompanhe o status na proposta.');
-            setSelectedProposal(null);
+        setIsAnalyzing(true);
+        const promise = fetch(`http://127.0.0.1:3001/vendors/${proposal.id}/analyze`, {
+            method: 'POST',
+        }).then(async (res) => {
+            if (!res.ok) throw new Error('Analysis failed');
+            // Wait a bit to ensure DB update propagates before refresh (optional but helpful)
+            await new Promise(resolve => setTimeout(resolve, 1000));
             router.refresh();
+            setSelectedProposal(null);
+        });
+
+        toast.promise(promise, {
+            loading: 'Realizando leitura inteligente do documento...',
+            success: 'Análise concluída! Os dados foram extraídos.',
+            error: (err: any) => `Falha na análise: ${err.message || 'Erro de conexão'}`,
+        });
+
+        try {
+            await promise;
         } catch (error) {
             console.error('Analysis error:', error);
-            alert('Erro ao iniciar análise');
         } finally {
             setIsAnalyzing(false);
         }
@@ -87,20 +111,82 @@ export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
             if (!response.ok) throw new Error('Rename failed');
             setSelectedProposal(null);
             router.refresh();
+            toast.success('Proposta renomeada');
         } catch (error) {
             console.error('Rename error:', error);
-            alert('Erro ao renomear proposta');
+            toast.error('Erro ao renomear proposta');
         }
     };
 
+    const handleStageChange = (stage: VendorDetail['stage']) => {
+        // Just change the view, don't update DB immediately unless we explicitly want to (which we don't for tabs)
+        setViewStage(stage);
+    };
+
+    const confirmStageChange = async () => {
+        if (!pendingStage) return;
+
+        setIsUpdatingStage(true);
+        try {
+            await updateVendor(vendor.id, { stage: pendingStage });
+            router.refresh();
+            setPendingStage(null);
+        } catch (error) {
+            console.error('Error updating stage:', error);
+            alert('Erro ao atualizar estágio');
+        } finally {
+            setIsUpdatingStage(false);
+        }
+    };
+
+    const handlePromoteToNegotiation = async (proposalId: string) => {
+        setNegotiationProposalId(proposalId);
+    };
+
+    const confirmNegotiation = async () => {
+        if (!negotiationProposalId) return;
+
+        setIsPromoting(true);
+        try {
+            await promoteToNegotiation(vendor.id, negotiationProposalId);
+            router.refresh();
+            // Modal will close automatically when component re-renders or we can clear state
+            setNegotiationProposalId(null);
+            toast.success('Fornecedor movido para Negociação!');
+        } catch (error) {
+            console.error('Error promoting to negotiation:', error);
+            toast.error('Erro ao avançar para negociação.');
+        } finally {
+            setIsPromoting(false);
+        }
+    };
+
+    const handleAdvanceToContract = () => {
+        setPendingStage('CONTRATO_EM_ANALISE');
+    };
+
     const renderStageContent = () => {
-        switch (vendor.stage) {
+        const isHistoryView = viewStage !== vendor.stage;
+        const currentStage = viewStage;
+
+        switch (currentStage) {
             case 'ORCAMENTO':
-                return <StageOrcamento vendor={vendor} onAnalyze={handleAnalyze} />;
+                return <StageOrcamento
+                    vendor={vendor}
+                    onAnalyze={handleAnalyze}
+                    onPromote={!isHistoryView ? handlePromoteToNegotiation : undefined}
+                />;
             case 'NEGOCIACAO':
-                return <StageNegociacao vendor={vendor} />;
+                return <StageNegociacao
+                    vendor={vendor}
+                    onAdvance={!isHistoryView ? handleAdvanceToContract : undefined}
+                />;
             case 'CONTRATO_EM_ANALISE':
-                return <StageContratoAnalise vendor={vendor} />;
+                return <StageContratoAnalise
+                    vendor={vendor}
+                    onAnalyze={handleAnalyze}
+                    onAdvance={!isHistoryView ? () => setPendingStage('CONTRATADO') : undefined}
+                />;
             case 'CONTRATADO':
                 return <StageContratado vendor={vendor} />;
             case 'CANCELADO':
@@ -123,8 +209,12 @@ export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
                 onEdit={() => setShowEditModal(true)}
             />
 
-            <main className="max-w-4xl mx-auto w-full px-4 pt-6">
-                {/* Stage Indicator (Optional - could be in Navbar) */}
+            <main className="max-w-4xl mx-auto w-full px-4 pt-24 space-y-6">
+                <VendorStageSelector
+                    currentStage={viewStage} // Use viewStage here
+                    onStageChange={handleStageChange}
+                    isLoading={isUpdatingStage}
+                />
 
                 {renderStageContent()}
 
@@ -146,6 +236,15 @@ export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
                 />
             )}
 
+            <NegotiationConfirmationModal
+                isOpen={!!negotiationProposalId}
+                onClose={() => setNegotiationProposalId(null)}
+                onConfirm={confirmNegotiation}
+                vendorName={vendor.name}
+                proposalAd={""} // We can get name if we look it up, strict mode issue?
+                isPromoting={isPromoting}
+            />
+
             {selectedProposal && (
                 <ProposalActionModal
                     isOpen={true}
@@ -156,6 +255,35 @@ export function VendorDetailClient({ vendor }: VendorDetailClientProps) {
                     onRename={handleRename}
                     isAnalyzing={isAnalyzing}
                 />
+            )}
+
+            {pendingStage && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center space-y-4 animate-scale-in">
+                        <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-amber-600">
+                            <AlertTriangle className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900">Alterar etapa?</h3>
+                        <p className="text-gray-600">
+                            Tem certeza que deseja alterar a etapa deste fornecedor para <strong>{pendingStage.replace(/_/g, ' ')}</strong>?
+                        </p>
+                        <div className="flex gap-3 pt-2">
+                            <button
+                                onClick={() => setPendingStage(null)}
+                                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmStageChange}
+                                disabled={isUpdatingStage}
+                                className="flex-1 py-2.5 bg-gold-primary hover:bg-gold-hover text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+                            >
+                                {isUpdatingStage ? 'Atualizando...' : 'Confirmar'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

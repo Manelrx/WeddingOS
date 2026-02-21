@@ -13,9 +13,13 @@ services:
     environment:
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public"
       REDIS_HOST: redis
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
     depends_on:
       - postgres
     restart: always
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   postgres:
     image: postgres:15-alpine

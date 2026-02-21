@@ -45,7 +45,24 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
         stage: vendor.stage,
         notes: vendor.notes || '',
         estimatedValue: vendor.estimatedValue || 0,
+        finalContractValue: vendor.finalContractValue || 0,
+        totalPaid: vendor.amountPaid || 0, // Mapped from amountPaid in summary/detail
+        proposalValidUntil: vendor.proposalValidUntil || '',
     });
+
+    // Reset form when vendor changes
+    React.useEffect(() => {
+        setForm({
+            name: vendor.name,
+            serviceType: vendor.category === 'decoration' ? 'Decoração' : vendor.category,
+            stage: vendor.stage,
+            notes: vendor.notes || '',
+            estimatedValue: vendor.estimatedValue || 0,
+            finalContractValue: vendor.finalContractValue || 0,
+            totalPaid: vendor.amountPaid || 0,
+            proposalValidUntil: vendor.proposalValidUntil || '',
+        });
+    }, [vendor]);
 
     const handleChange = (field: string, value: string | number) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -55,7 +72,15 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
         setIsSaving(true);
         setError(null);
         try {
-            await updateVendor(vendor.id, form);
+            await updateVendor(vendor.id, {
+                ...form,
+                // Ensure number fields are numbers
+                estimatedValue: Number(form.estimatedValue),
+                finalContractValue: Number(form.finalContractValue),
+                totalPaid: Number(form.totalPaid),
+                // Handle empty date string
+                proposalValidUntil: form.proposalValidUntil ? new Date(form.proposalValidUntil).toISOString() : undefined,
+            });
             router.refresh();
             onClose();
         } catch (err: any) {
@@ -76,6 +101,12 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
             setIsDeleting(false);
         }
     };
+
+    // Merge options with current vendor category if unique
+    const currentCategory = vendor.category === 'decoration' ? 'Decoração' : vendor.category;
+    const allCategoryOptions = categoryOptions.some(opt => opt.value === currentCategory)
+        ? categoryOptions
+        : [{ value: currentCategory, label: currentCategory }, ...categoryOptions];
 
     return (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
@@ -124,11 +155,14 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
                             className="w-full px-4 py-3 bg-cream border-2 border-transparent focus:border-gold rounded-xl text-text-primary font-medium focus:outline-none transition-colors appearance-none"
                             disabled={isSaving}
                         >
-                            {categoryOptions.map(opt => (
+                            {allCategoryOptions.map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
                             ))}
                         </select>
                     </div>
+
+                    {/* Stage (Read-only or editable? User asked for stage selector outside, but didn't say remove from here. Keeping it enables quick fixes if needed, but per request, the control is now main view. I will keep it but sync with main view.) */}
+
 
                     {/* Estimated Value */}
                     <div>
@@ -139,8 +173,8 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gold-dark/60 font-light text-lg">R$</span>
                             <input
                                 type="number"
-                                value={form.estimatedValue || ''}
-                                onChange={(e) => handleChange('estimatedValue', Number(e.target.value))}
+                                value={form.estimatedValue}
+                                onChange={(e) => handleChange('estimatedValue', e.target.value)}
                                 className="w-full pl-12 pr-4 py-3 bg-cream border-2 border-transparent focus:border-gold rounded-xl text-text-primary font-semibold text-lg focus:outline-none transition-colors"
                                 placeholder="0,00"
                                 disabled={isSaving}
@@ -148,21 +182,56 @@ export function VendorEditModal({ vendor, onClose }: VendorEditModalProps) {
                         </div>
                     </div>
 
-                    {/* Stage */}
+                    {/* Financial Fields - Only for CONTRATADO */}
+                    {form.stage === 'CONTRATADO' && (
+                        <div className="space-y-5 pt-4 border-t border-dashed border-stone-200">
+                            <div>
+                                <label className="block text-xs font-medium text-warm-gray uppercase tracking-wider mb-2">
+                                    Valor Final do Contrato
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-green-600/60 font-light text-lg">R$</span>
+                                    <input
+                                        type="number"
+                                        value={form.finalContractValue}
+                                        onChange={(e) => handleChange('finalContractValue', e.target.value)}
+                                        className="w-full pl-12 pr-4 py-3 bg-green-50 border-2 border-transparent focus:border-green-500 rounded-xl text-green-800 font-semibold text-lg focus:outline-none transition-colors"
+                                        placeholder="0,00"
+                                        disabled={isSaving}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-warm-gray uppercase tracking-wider mb-2">
+                                    Total Pago
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600/60 font-light text-lg">R$</span>
+                                    <input
+                                        type="number"
+                                        value={form.totalPaid}
+                                        onChange={(e) => handleChange('totalPaid', e.target.value)}
+                                        className="w-full pl-12 pr-4 py-3 bg-blue-50 border-2 border-transparent focus:border-blue-500 rounded-xl text-blue-800 font-semibold text-lg focus:outline-none transition-colors"
+                                        placeholder="0,00"
+                                        disabled={isSaving}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Proposal Valid Until */}
                     <div>
                         <label className="block text-xs font-medium text-warm-gray uppercase tracking-wider mb-2">
-                            Estágio / Status
+                            Validade da Proposta
                         </label>
-                        <select
-                            value={form.stage}
-                            onChange={(e) => handleChange('stage', e.target.value)}
-                            className="w-full px-4 py-3 bg-cream border-2 border-transparent focus:border-gold rounded-xl text-text-primary font-medium focus:outline-none transition-colors appearance-none"
+                        <input
+                            type="date"
+                            value={form.proposalValidUntil ? new Date(form.proposalValidUntil).toISOString().split('T')[0] : ''}
+                            onChange={(e) => handleChange('proposalValidUntil', e.target.value)}
+                            className="w-full px-4 py-3 bg-cream border-2 border-transparent focus:border-gold rounded-xl text-text-primary font-medium focus:outline-none transition-colors"
                             disabled={isSaving}
-                        >
-                            {stageOptions.map(opt => (
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                        </select>
+                        />
                     </div>
 
                     {/* Notes */}

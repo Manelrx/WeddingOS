@@ -4,9 +4,14 @@ import { VendorDetail } from '@/types/vendor.types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export async function getVendorsByWedding(weddingId: string): Promise<VendorSummary[]> {
+export async function getVendorsByWedding(weddingId: string, serviceType?: string): Promise<VendorSummary[]> {
     try {
-        const res = await fetch(`${API_URL}/weddings/${weddingId}/vendors`, {
+        const url = new URL(`${API_URL}/weddings/${weddingId}/vendors`);
+        if (serviceType) {
+            url.searchParams.append('serviceType', serviceType);
+        }
+
+        const res = await fetch(url.toString(), {
             cache: 'no-store',
         });
 
@@ -72,11 +77,11 @@ export async function createVendor(weddingId: string, payload: CreateVendorPaylo
     return res.json();
 }
 
-export async function uploadProposal(vendorId: string, file: File): Promise<{ id: string; status: string }> {
+export async function uploadProposal(vendorId: string, file: File, context: 'proposal' | 'contract' = 'proposal'): Promise<{ id: string; status: string }> {
     const formData = new FormData();
     formData.append('file', file);
 
-    const res = await fetch(`${API_URL}/vendors/${vendorId}/proposals`, {
+    const res = await fetch(`${API_URL}/vendors/${vendorId}/proposals?context=${context}`, {
         method: 'POST',
         body: formData,
     });
@@ -98,6 +103,7 @@ export interface UpdateVendorPayload {
     proposalValidUntil?: string;
     finalContractValue?: number;
     totalPaid?: number;
+    selectedProposalId?: string;
 }
 
 export async function updateVendor(vendorId: string, payload: UpdateVendorPayload): Promise<any> {
@@ -126,14 +132,34 @@ export async function deleteVendor(vendorId: string): Promise<void> {
     }
 }
 
-export async function analyzeProposal(proposalId: string): Promise<{ id: string; status: string }> {
-    const res = await fetch(`${API_URL}/vendors/${proposalId}/analyze`, {
+export async function analyzeProposal(proposalId: string, context?: 'proposal' | 'contract' | 'negotiation'): Promise<{ id: string; status: string }> {
+    const url = new URL(`${API_URL}/vendors/${proposalId}/analyze`);
+    if (context) {
+        url.searchParams.append('context', context);
+    }
+
+    const res = await fetch(url.toString(), {
         method: 'POST',
     });
 
     if (!res.ok) {
         const errorBody = await res.text();
         throw new Error(`Failed to trigger analysis: ${res.status} ${errorBody}`);
+    }
+
+    return res.json();
+}
+
+export async function promoteToNegotiation(vendorId: string, proposalId: string): Promise<VendorDetail> {
+    const res = await fetch(`${API_URL}/vendors/${vendorId}/promote`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proposalId }),
+    });
+
+    if (!res.ok) {
+        const errorBody = await res.text();
+        throw new Error(`Failed to promote vendor: ${res.status} ${errorBody}`);
     }
 
     return res.json();

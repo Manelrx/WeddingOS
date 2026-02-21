@@ -7,5 +7,9 @@ import { AiModule } from '../ai/ai.module';
     imports: [QueueModule, AiModule],
     providers: [ProposalProcessor],
 })
-export class WorkerModule { }
+export class WorkerModule {
+    constructor() {
+        console.log('WorkerModule INITIALIZED!');
+    }
+}
 

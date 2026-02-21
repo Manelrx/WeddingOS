@@ -1,8 +1,8 @@
 import { ComparisonMatrix } from "@/app/types/comparison";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/card";
 import { Check, X, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface LupaViewProps {

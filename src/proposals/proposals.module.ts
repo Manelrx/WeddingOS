@@ -48,5 +48,6 @@ import { QueueModule } from '../queue/queue.module';
     ],
     controllers: [ProposalsController],
     providers: [ProposalsService],
+    exports: [ProposalsService],
 })
 export class ProposalsModule { }

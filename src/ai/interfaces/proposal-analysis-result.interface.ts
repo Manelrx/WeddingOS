@@ -41,6 +41,12 @@ export interface ProposalAnalysisResult {
     /** Diferenciais de mercado. */
     diferenciais?: string[];
 
+    /** Destaques para negociação (estratégias). */
+    negotiationHighlights?: string[];
+
+    /** Pontos chave do contrato. */
+    contractKeyPoints?: string[];
+
     /** Nome do modelo usado (observabilidade). */
     aiModelUsed?: string;
 
