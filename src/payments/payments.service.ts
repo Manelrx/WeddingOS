@@ -6,11 +6,14 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 export class PaymentsService {
     constructor(private prisma: PrismaService) { }
 
-    async createPayment(dto: CreatePaymentDto) {
+    async createPayment(dto: CreatePaymentDto, userId: string) {
         return this.prisma.$transaction(async (tx) => {
-            // 1. Verify vendor exists & cross-tenant check
-            const vendor = await tx.vendor.findUnique({
-                where: { id: dto.vendorId },
+            // 1. Verify vendor exists & cross-tenant check with user membership
+            const vendor = await tx.vendor.findFirst({
+                where: {
+                    id: dto.vendorId,
+                    wedding: { members: { some: { userId } } }
+                },
                 include: {
                     installments: true,
                     payments: true
@@ -18,7 +21,7 @@ export class PaymentsService {
             });
 
             if (!vendor) {
-                throw new NotFoundException('Vendor not found');
+                throw new NotFoundException('Fornecedor não encontrado ou acesso restrito.');
             }
 
             if (vendor.weddingId !== dto.weddingId) {

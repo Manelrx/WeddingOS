@@ -6,19 +6,28 @@ import { FilterButton } from '@/components/vendors/list/FilterButton';
 import { VendorListCard } from '@/components/vendors/list/VendorListCard';
 import { FloatingActionButton } from '@/components/vendors/list/FloatingActionButton';
 import { getVendorsByWedding } from '@/lib/api/vendors.api';
+import { getMyWedding } from '@/lib/api/weddings.api';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 interface VendorsPageProps {
     searchParams: Promise<{ category?: string }>;
 }
 
 export default async function VendorsPage({ searchParams }: VendorsPageProps) {
-    // Temporary hardcoded ID as per instructions
-    const weddingId = "857cfa73-9305-4b00-84e2-7746eed73ab8";
     const params = await searchParams;
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get('weddingos_token')?.value;
+
+    if (!token) {
+        redirect("/login");
+    }
 
     let vendors: Awaited<ReturnType<typeof getVendorsByWedding>> = [];
     try {
-        const result = await getVendorsByWedding(weddingId);
+        const wedding = await getMyWedding(token);
+        const result = await getVendorsByWedding(wedding.id, undefined, token);
         vendors = result || [];
     } catch (error) {
         console.error("Failed to fetch vendors:", error);

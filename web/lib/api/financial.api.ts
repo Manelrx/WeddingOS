@@ -38,9 +38,13 @@ export interface CreatePaymentPayload {
     installmentId?: string;
 }
 
-export async function getVendorFinancials(vendorId: string): Promise<VendorFinancialDTO> {
+export async function getVendorFinancials(vendorId: string, token?: string): Promise<VendorFinancialDTO> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Cookie'] = `weddingos_token=${token}`;
+
     const res = await fetch(`${API_URL}/vendors/${vendorId}/financial`, {
         cache: 'no-store',
+        headers
     });
 
     if (!res.ok) {
@@ -51,7 +55,8 @@ export async function getVendorFinancials(vendorId: string): Promise<VendorFinan
 }
 
 export async function registerPayment(payload: CreatePaymentPayload): Promise<PaymentDTO> {
-    const res = await fetch(`${API_URL}/payments`, {
+    // Uses Next.js Rewrite rule to proxy the request and forward client-side cookies automatically
+    const res = await fetch(`/api/proxy/payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

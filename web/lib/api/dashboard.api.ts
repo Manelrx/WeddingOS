@@ -3,9 +3,13 @@ import { DashboardSummaryDTO } from "@/types/dashboard.types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export async function getDashboardSummary(weddingId: string): Promise<DashboardSummaryDTO> {
+export async function getDashboardSummary(weddingId: string, token?: string): Promise<DashboardSummaryDTO> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Cookie'] = `weddingos_token=${token}`;
+
     const res = await fetch(`${API_URL}/dashboard/summary/${weddingId}`, {
         cache: 'no-store', // Always fetch fresh data as requested
+        headers
     });
 
     if (!res.ok) {

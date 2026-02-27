@@ -13,15 +13,20 @@ export class VendorsService {
         private readonly proposalsService: ProposalsService
     ) { }
 
-    async create(weddingId: string, createVendorDto: CreateVendorDto) {
+    async create(weddingId: string, createVendorDto: CreateVendorDto, userId: string) {
         try {
-            // Validate if wedding exists
-            const wedding = await this.prisma.wedding.findUnique({
-                where: { id: weddingId },
+            // Validate if wedding exists and user is a member
+            const wedding = await this.prisma.wedding.findFirst({
+                where: {
+                    id: weddingId,
+                    members: {
+                        some: { userId }
+                    }
+                },
             });
 
             if (!wedding) {
-                throw new NotFoundException(`Wedding with ID ${weddingId} not found`);
+                throw new NotFoundException(`Casamento não encontrado ou sem permissão de acesso.`);
             }
 
             return await this.prisma.vendor.create({
@@ -37,8 +42,14 @@ export class VendorsService {
         }
     }
 
-    async findAll(weddingId: string, serviceType?: string) {
+    async findAll(weddingId: string, userId: string, serviceType?: string) {
         try {
+            const wedding = await this.prisma.wedding.findFirst({
+                where: { id: weddingId, members: { some: { userId } } }
+            });
+
+            if (!wedding) throw new NotFoundException(`Acesso negado ao casamento.`);
+
             const whereClause: any = { weddingId };
             if (serviceType) {
                 // Multi-term mapping for common variations
@@ -107,9 +118,14 @@ export class VendorsService {
         }
     }
 
-    async findOne(id: string) {
-        const vendor = await this.prisma.vendor.findUnique({
-            where: { id },
+    async findOne(id: string, userId: string) {
+        const vendor = await this.prisma.vendor.findFirst({
+            where: {
+                id,
+                wedding: {
+                    members: { some: { userId } }
+                }
+            },
             include: {
                 proposals: {
                     include: {
@@ -128,7 +144,7 @@ export class VendorsService {
         });
 
         if (!vendor) {
-            throw new NotFoundException(`Vendor with ID ${id} not found`);
+            throw new NotFoundException(`Fornecedor não encontrado ou sem permissão.`);
         }
 
         // Logic to get total value from the latest proposal analysis
@@ -198,9 +214,21 @@ export class VendorsService {
         };
     }
 
-    async update(id: string, updateVendorDto: UpdateVendorDto) {
+    async getFinancial(id: string, userId: string) {
+        const vendor = await this.findOne(id, userId); // findOne already enforces tenant checks
+
+        // (We expect to implement the dynamic financial data generation logic here for the budget later)
+        // Note: the backend integration plan says GET /vendors/:id/financial should compute everything without persisting.
+        // I will return a placeholder for now to satisfy the controller signature.
+        return {
+            id: vendor.id,
+            financialStatus: vendor.totalValue > vendor.amountPaid ? 'EM_ABERTO' : 'PAGO'
+        };
+    }
+
+    async update(id: string, updateVendorDto: UpdateVendorDto, userId: string) {
         // Check if vendor exists first to throw correct 404
-        await this.findOne(id);
+        await this.findOne(id, userId);
 
         return this.prisma.vendor.update({
             where: { id },
@@ -208,18 +236,21 @@ export class VendorsService {
         });
     }
 
-    async remove(id: string) {
+    async remove(id: string, userId: string) {
         // Check if vendor exists first
-        await this.findOne(id);
+        await this.findOne(id, userId);
 
         return this.prisma.vendor.delete({
             where: { id },
         });
     }
-    async promoteToNegotiation(vendorId: string, proposalId: string) {
+    async promoteToNegotiation(vendorId: string, proposalId: string, userId: string) {
         // 1. Validate
-        const vendor = await this.prisma.vendor.findUnique({
-            where: { id: vendorId },
+        const vendor = await this.prisma.vendor.findFirst({
+            where: {
+                id: vendorId,
+                wedding: { members: { some: { userId } } }
+            },
             include: { proposals: true }
         });
         if (!vendor) throw new NotFoundException(`Vendor ${vendorId} not found`);
@@ -243,7 +274,16 @@ export class VendorsService {
         return updatedVendor;
     }
 
-    async analyzeProposal(proposalId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
+    async analyzeProposal(proposalId: string, userId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
+        const proposal = await this.prisma.proposal.findFirst({
+            where: {
+                id: proposalId,
+                vendor: { wedding: { members: { some: { userId } } } }
+            }
+        });
+
+        if (!proposal) throw new NotFoundException(`Proposta não encontrada ou acesso negado.`);
+
         return this.proposalsService.analyze(proposalId, context);
     }
 }

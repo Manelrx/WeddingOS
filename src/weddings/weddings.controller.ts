@@ -1,24 +1,28 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Req, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { WeddingsService } from './weddings.service';
-import { CreateWeddingDto } from './dto/create-wedding.dto';
 import { SetupWeddingDto } from './dto/setup-wedding.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('weddings')
 export class WeddingsController {
     constructor(private readonly weddingsService: WeddingsService) { }
 
-    @Post()
-    create(@Body() createWeddingDto: CreateWeddingDto) {
-        return this.weddingsService.create(createWeddingDto);
-    }
-
     @Post('setup')
-    setup(@Body() setupDto: SetupWeddingDto) {
-        return this.weddingsService.setup(setupDto);
+    setup(@Body() setupDto: SetupWeddingDto, @Req() req: any) {
+        if (!req.user || !req.user.id) throw new UnauthorizedException();
+        return this.weddingsService.setup(setupDto, req.user.id);
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.weddingsService.findOne(id);
+    @Get('my-wedding')
+    findMyWedding(@Req() req: any) {
+        if (!req.user || !req.user.id) throw new UnauthorizedException();
+        return this.weddingsService.findMyWedding(req.user.id);
+    }
+
+    @Patch(':id/budget')
+    updateBudget(@Param('id') id: string, @Body('totalBudget') totalBudget: number, @Req() req: any) {
+        if (!req.user || !req.user.id) throw new UnauthorizedException();
+        return this.weddingsService.updateBudget(id, totalBudget, req.user.id);
     }
 }

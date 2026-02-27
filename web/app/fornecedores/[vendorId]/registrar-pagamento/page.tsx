@@ -5,7 +5,8 @@ import { getVendorById } from "@/lib/api/vendors.api";
 import { PaymentForm } from "@/components/vendors/payment/payment-form";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 interface PageProps {
     params: Promise<{
@@ -16,8 +17,15 @@ interface PageProps {
 export default async function RegisterPaymentPage({ params }: PageProps) {
     const { vendorId } = await params;
 
-    const vendorData = getVendorById(vendorId);
-    const financialData = getVendorFinancials(vendorId);
+    const cookieStore = await cookies();
+    const token = cookieStore.get('weddingos_token')?.value;
+
+    if (!token) {
+        redirect("/login");
+    }
+
+    const vendorData = getVendorById(vendorId, token);
+    const financialData = getVendorFinancials(vendorId, token);
 
     const [vendor, financial] = await Promise.all([vendorData, financialData]);
 

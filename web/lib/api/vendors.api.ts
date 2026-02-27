@@ -4,15 +4,19 @@ import { VendorDetail } from '@/types/vendor.types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export async function getVendorsByWedding(weddingId: string, serviceType?: string): Promise<VendorSummary[]> {
+export async function getVendorsByWedding(weddingId: string, serviceType?: string, token?: string): Promise<VendorSummary[]> {
     try {
         const url = new URL(`${API_URL}/weddings/${weddingId}/vendors`);
         if (serviceType) {
             url.searchParams.append('serviceType', serviceType);
         }
 
+        const headers: Record<string, string> = {};
+        if (token) headers['Cookie'] = `weddingos_token=${token}`;
+
         const res = await fetch(url.toString(), {
             cache: 'no-store',
+            headers
         });
 
         if (!res.ok) {
@@ -45,9 +49,13 @@ export async function getVendorsByWedding(weddingId: string, serviceType?: strin
     }
 }
 
-export async function getVendorById(vendorId: string): Promise<VendorDetail> {
+export async function getVendorById(vendorId: string, token?: string): Promise<VendorDetail> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Cookie'] = `weddingos_token=${token}`;
+
     const res = await fetch(`${API_URL}/vendors/${vendorId}`, {
         cache: 'no-store',
+        headers
     });
 
     if (!res.ok) {

@@ -6529,3 +6529,300 @@ Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `ema
     at async AuthService.register (/usr/src/app/src/auth/auth.service.ts:16:30)
     at async /usr/src/app/node_modules/@nestjs/core/router/router-execution-context.js:46:28
     at async /usr/src/app/node_modules/@nestjs/core/router/router-proxy.js:9:17
+[31m[Nest] 34  - [39m02/27/2026, 4:23:54 AM [31m  ERROR[39m [38;5;3m[ExceptionsHandler] [39m[31m
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.[39m
+PrismaClientValidationError: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at wn (/usr/src/app/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at $n.handleRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6958)
+    at $n.handleAndLogRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/usr/src/app/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async AuthService.register (/usr/src/app/src/auth/auth.service.ts:16:30)
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-proxy.js:9:17
+[2J[3J[H[[90m4:25:14 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m4:25:15 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+QueueModule INITIALIZED!
+WorkerModule INITIALIZED!
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +32ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMulterModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mQueueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mStorageModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDashboardModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +3ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[AiService] [39m[32mAI Provider initialized: gemini-3-flash-preview (gemini)[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAiModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[33m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [33m   WARN[39m [38;5;3m[ProposalProcessor] [39m[33mProposalProcessor INITIALIZED! worker-enabled=true[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWeddingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBudgetModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWorkerModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mComparisonModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProposalsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWeddingsController {/weddings}:[39m[38;5;3m +6ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/setup, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/my-wedding, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:id/budget, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/promote, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/financial, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mFinancialController {/vendors/:id}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/financial, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProposalsController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/proposals, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/download, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mComparisonController {/weddings/:weddingId/comparisons}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/comparisons/:serviceType, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDashboardController {/dashboard}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dashboard/summary/:weddingId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBudgetController {/budget}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/budget/summary/:weddingId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 140  - [39m02/27/2026, 4:25:17 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +148ms[39m
+Application is running on: http://127.0.0.1:3000
+npm error path /usr/src/app
+npm error command failed
+npm error signal SIGTERM
+npm error command sh -c nest start --watch
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-02-27T04_18_27_342Z-debug-0.log
+
+> wedding-os-backend@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m4:26:39 AM[0m] Starting compilation in watch mode...
+
+[[90m4:26:50 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+QueueModule INITIALIZED!
+WorkerModule INITIALIZED!
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +35ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMulterModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mQueueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mStorageModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDashboardModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[AiService] [39m[32mAI Provider initialized: gemini-3-flash-preview (gemini)[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAiModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[33m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [33m   WARN[39m [38;5;3m[ProposalProcessor] [39m[33mProposalProcessor INITIALIZED! worker-enabled=true[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWeddingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBudgetModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWorkerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mComparisonModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProposalsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWeddingsController {/weddings}:[39m[38;5;3m +6ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/setup, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/my-wedding, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:id/budget, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/promote, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/vendors, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/financial, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mFinancialController {/vendors/:id}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/financial, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProposalsController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/proposals, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId/analyze, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/download, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:proposalId, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mComparisonController {/weddings/:weddingId/comparisons}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/weddings/:weddingId/comparisons/:serviceType, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDashboardController {/dashboard}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dashboard/summary/:weddingId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBudgetController {/budget}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/budget/summary/:weddingId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentsController {/payments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payments, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 34  - [39m02/27/2026, 4:26:52 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +92ms[39m
+Application is running on: http://127.0.0.1:3000
+[31m[Nest] 34  - [39m02/27/2026, 4:28:12 AM [31m  ERROR[39m [38;5;3m[ExceptionsHandler] [39m[31m
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.[39m
+PrismaClientValidationError: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at wn (/usr/src/app/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at $n.handleRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6958)
+    at $n.handleAndLogRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/usr/src/app/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async AuthService.register (/usr/src/app/src/auth/auth.service.ts:16:30)
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-proxy.js:9:17
+[31m[Nest] 34  - [39m02/27/2026, 4:31:44 AM [31m  ERROR[39m [38;5;3m[ExceptionsHandler] [39m[31m
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.[39m
+PrismaClientValidationError: 
+Invalid `this.prisma.user.findUnique()` invocation in
+/usr/src/app/src/auth/auth.service.ts:16:53
+
+  13 ) { }
+  14 
+  15 async register(registerDto: RegisterDto) {
+→ 16     const existingUser = await this.prisma.user.findUnique({
+           where: {
+             email: undefined,
+         ?   id?: String,
+         ?   AND?: UserWhereInput | UserWhereInput[],
+         ?   OR?: UserWhereInput[],
+         ?   NOT?: UserWhereInput | UserWhereInput[],
+         ?   password?: StringFilter | String,
+         ?   name?: StringFilter | String,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   weddings?: WeddingMemberListRelationFilter
+           }
+         })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+    at wn (/usr/src/app/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at $n.handleRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6958)
+    at $n.handleAndLogRequestError (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/usr/src/app/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/usr/src/app/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async AuthService.register (/usr/src/app/src/auth/auth.service.ts:16:30)
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /usr/src/app/node_modules/@nestjs/core/router/router-proxy.js:9:17

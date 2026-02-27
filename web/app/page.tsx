@@ -7,18 +7,25 @@ import { GuestSummary } from "@/components/home/guest-summary";
 import { OpenDecisions } from "@/components/home/open-decisions";
 import { DailyMood } from "@/components/home/daily-mood";
 import { getDashboardSummary } from "@/lib/api/dashboard.api";
+import { getMyWedding } from "@/lib/api/weddings.api";
 import { DashboardSummaryDTO } from "@/types/dashboard.types";
 import { PremiumDashboardData } from "@/types/premium-dashboard";
-
-// Demo ID obtained from database.
-// In a real app, this would come from the user session or context.
-const DEMO_WEDDING_ID = '857cfa73-9305-4b00-84e2-7746eed73ab8';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   let summary: DashboardSummaryDTO;
 
   try {
-    summary = await getDashboardSummary(DEMO_WEDDING_ID);
+    const cookieStore = await cookies();
+    const token = cookieStore.get('weddingos_token')?.value;
+
+    if (!token) {
+      redirect("/login");
+    }
+
+    const wedding = await getMyWedding(token);
+    summary = await getDashboardSummary(wedding.id, token);
   } catch (error) {
     console.error("Failed to fetch dashboard summary:", error);
     return (

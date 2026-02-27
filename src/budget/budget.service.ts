@@ -7,13 +7,16 @@ import { VendorStage } from '@prisma/client';
 export class BudgetService {
     constructor(private prisma: PrismaService) { }
 
-    async getBudgetSummary(weddingId: string): Promise<BudgetSummaryDto> {
-        const wedding = await this.prisma.wedding.findUnique({
-            where: { id: weddingId }
+    async getBudgetSummary(weddingId: string, userId: string): Promise<BudgetSummaryDto> {
+        const wedding = await this.prisma.wedding.findFirst({
+            where: {
+                id: weddingId,
+                members: { some: { userId } }
+            }
         });
 
         if (!wedding) {
-            throw new NotFoundException('Wedding not found');
+            throw new NotFoundException('Casamento não encontrado ou acesso restrito.');
         }
 
         // 1. Financial Summary

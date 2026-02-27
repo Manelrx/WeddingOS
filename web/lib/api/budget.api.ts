@@ -22,9 +22,13 @@ export interface BudgetSummaryDTO {
     }[];
 }
 
-export async function getBudgetSummary(weddingId: string): Promise<BudgetSummaryDTO> {
+export async function getBudgetSummary(weddingId: string, token?: string): Promise<BudgetSummaryDTO> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Cookie'] = `weddingos_token=${token}`;
+
     const res = await fetch(`${API_URL}/budget/summary/${weddingId}`, {
         cache: 'no-store',
+        headers
     });
 
     if (!res.ok) {

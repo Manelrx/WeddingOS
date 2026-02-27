@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateWeddingDto } from './dto/create-wedding.dto';
 import { SetupWeddingDto } from './dto/setup-wedding.dto';
 import { VendorStage } from '@prisma/client';
 
@@ -8,41 +7,61 @@ import { VendorStage } from '@prisma/client';
 export class WeddingsService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async create(createWeddingDto: CreateWeddingDto) {
-        return this.prisma.wedding.create({
-            data: {
-                title: createWeddingDto.title,
-                eventDate: createWeddingDto.eventDate ? new Date(createWeddingDto.eventDate) : null,
+    async findMyWedding(userId: string) {
+        const wedding = await this.prisma.wedding.findFirst({
+            where: {
+                members: {
+                    some: { userId }
+                }
             },
-        });
-    }
-
-    async findOne(id: string) {
-        const wedding = await this.prisma.wedding.findUnique({
-            where: { id },
+            include: {
+                members: {
+                    include: { user: { select: { id: true, name: true, email: true } } }
+                }
+            }
         });
 
         if (!wedding) {
-            throw new NotFoundException(`Wedding with ID ${id} not found`);
+            throw new NotFoundException(`Nenhum casamento vinculado a este usuário.`);
         }
 
         return wedding;
     }
 
-    async setup(setupDto: SetupWeddingDto) {
+    async updateBudget(weddingId: string, totalBudget: number, userId: string) {
+        const wedding = await this.prisma.wedding.findFirst({
+            where: {
+                id: weddingId,
+                members: { some: { userId } }
+            }
+        });
+
+        if (!wedding) throw new NotFoundException('Casamento não encontrado ou acesso restrito.');
+
+        return this.prisma.wedding.update({
+            where: { id: weddingId },
+            data: { totalBudget }
+        });
+    }
+
+    async setup(setupDto: SetupWeddingDto, userId: string) {
         return this.prisma.$transaction(async (tx) => {
-            // 1. Create the Wedding tenant
             const wedding = await tx.wedding.create({
                 data: {
-                    title: `Casamento de ${setupDto.coupleNames}`, // fallback title
+                    title: `Casamento de ${setupDto.coupleNames}`,
                     coupleNames: setupDto.coupleNames,
                     eventDate: setupDto.eventDate ? new Date(setupDto.eventDate) : null,
                     totalBudget: setupDto.totalBudget,
                     guestCount: setupDto.guestCount,
+                    members: {
+                        create: {
+                            userId,
+                            role: 'OWNER'
+                        }
+                    }
                 },
             });
 
-            // 2. Create the placeholder/shell Vendors for each selected service
             if (setupDto.services && setupDto.services.length > 0) {
                 const vendorData = setupDto.services.map(service => ({
                     weddingId: wedding.id,

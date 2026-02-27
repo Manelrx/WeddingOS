@@ -21,6 +21,8 @@ const imports = [
     ComparisonModule,
     DashboardModule,
     BudgetModule,
+    PaymentsModule,
+    AuthModule,
 ];
 
 if (process.env.QUEUE_ENABLED === 'true') {
