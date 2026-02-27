@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-=======
-
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PaymentStatus } from '@prisma/client';
->>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 
 @Injectable()
 export class FinancialService {
@@ -30,48 +24,6 @@ export class FinancialService {
             throw new NotFoundException('Vendor not found');
         }
 
-<<<<<<< HEAD
-        const totalContract = Number(vendor.finalContractValue) || null;
-
-        // Compute dynamically
-        const totalPaid = vendor.payments.reduce((sum, p) => sum + Number(p.amount), 0);
-
-        let remaining = 0;
-        let progress = 0;
-
-        if (totalContract !== null) {
-            remaining = totalContract - totalPaid;
-            if (totalContract > 0) {
-                progress = totalPaid / totalContract;
-            }
-        }
-
-        const mappedInstallments = vendor.installments.map(inst => {
-            let status = 'EM_ABERTO';
-            if (inst.paidAt != null) {
-                status = 'PAGO';
-            } else if (inst.dueDate < new Date()) {
-                status = 'ATRASADO';
-            }
-
-            return {
-                ...inst,
-                amount: Number(inst.amount),
-                status
-            };
-        });
-
-        return {
-            totalContract: totalContract || 0,
-            totalPaid,
-            remaining,
-            progress: progress,
-            installments: mappedInstallments,
-            notes: vendor.notes,
-            payments: vendor.payments.map(p => ({ ...p, amount: Number(p.amount) }))
-        };
-    }
-=======
         const totalContract = Number(vendor.finalContractValue || 0);
         const totalPaid = Number(vendor.totalPaid || 0);
         const remaining = Number(vendor.remainingBalance || 0);
@@ -136,5 +88,4 @@ export class FinancialService {
             return payment;
         });
     }
->>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 }
