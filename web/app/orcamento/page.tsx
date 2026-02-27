@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 import { Container } from "@/components/layout/container";
 import { getBudgetSummary } from "@/lib/api/budget.api";
 import { getMyWedding } from "@/lib/api/weddings.api";
+=======
+
+import { Container } from "@/components/layout/container";
+import { getBudgetSummary } from "@/lib/api/budget.api";
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 import { BudgetSummaryCards } from "@/components/budget/budget-summary-cards";
 import { VendorStatus } from "@/components/budget/vendor-status";
 import { NextPaymentsList } from "@/components/budget/next-payments-list";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+<<<<<<< HEAD
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -23,6 +30,18 @@ export default async function BudgetPage() {
         const wedding = await getMyWedding(token);
         summary = await getBudgetSummary(wedding.id, token);
         summary.weddingId = wedding.id;
+=======
+
+// Demo ID obtained from database.
+// In a real app, this would come from the user session or context.
+const DEMO_WEDDING_ID = '857cfa73-9305-4b00-84e2-7746eed73ab8';
+
+export default async function BudgetPage() {
+    let summary;
+
+    try {
+        summary = await getBudgetSummary(DEMO_WEDDING_ID);
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     } catch (error) {
         console.error("Failed to fetch budget summary:", error);
         return (
@@ -47,7 +66,11 @@ export default async function BudgetPage() {
             </div>
 
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+<<<<<<< HEAD
                 <BudgetSummaryCards data={summary} weddingId={summary.weddingId} />
+=======
+                <BudgetSummaryCards data={summary} />
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
             </section>
 
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 
 import React, { useState } from 'react';
@@ -19,6 +20,19 @@ export function BudgetSummaryCards({ data, weddingId }: SummaryCardsProps) {
     const [inputValue, setInputValue] = useState(data.totalBudget.toString());
     const [isSaving, setIsSaving] = useState(false);
 
+=======
+
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { BudgetSummaryDTO } from '@/lib/api/budget.api';
+import { DollarSign, Wallet, CheckCircle2 } from 'lucide-react';
+
+interface SummaryCardsProps {
+    data: Pick<BudgetSummaryDTO, 'totalBudget' | 'contractedTotal' | 'availableAmount'>;
+}
+
+export function BudgetSummaryCards({ data }: SummaryCardsProps) {
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
@@ -27,6 +41,7 @@ export function BudgetSummaryCards({ data, weddingId }: SummaryCardsProps) {
         }).format(value);
     };
 
+<<<<<<< HEAD
     const handleSave = async () => {
         const numericValue = Number(inputValue.replace(/[^0-9.-]+/g, ""));
         if (isNaN(numericValue) || numericValue <= 0) return;
@@ -91,6 +106,28 @@ export function BudgetSummaryCards({ data, weddingId }: SummaryCardsProps) {
                                         </button>
                                     </div>
                                 )}
+=======
+    return (
+        <div className="space-y-4">
+            <h3 className="font-semibold text-lg text-text-primary px-1">Resumo Financeiro</h3>
+            <div className="grid grid-cols-2 gap-3">
+                {/* Total Budget - Full Width or Prominent? Stitch shows clean list style or grid? 
+            Stitch HTML text suggests linear list:
+            "Orçamento Total R$ 50k"
+            "Contratado R$ 32k"
+            "Disponível R$ 18k"
+            Let's preserve the FinancialSummary card style which is nice.
+        */}
+                <Card className="col-span-2 shadow-soft border-none bg-white">
+                    <CardContent className="p-5 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <DollarSign className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <span className="text-xs uppercase tracking-wide text-text-secondary font-medium">Orçamento Total</span>
+                                <p className="text-2xl font-bold text-text-primary mt-0.5">{formatCurrency(data.totalBudget)}</p>
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
                             </div>
                         </div>
                     </CardContent>

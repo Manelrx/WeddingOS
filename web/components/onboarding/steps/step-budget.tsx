@@ -1,10 +1,19 @@
 'use client';
 
+<<<<<<< HEAD
 import { SetupWeddingPayload } from "@/lib/api/weddings.api";
 
 interface StepBudgetProps {
     data: SetupWeddingPayload;
     updateData: (fields: Partial<SetupWeddingPayload>) => void;
+=======
+
+interface StepBudgetProps {
+    data: {
+        totalBudget: number;
+    };
+    updateData: (fields: Partial<StepBudgetProps['data']>) => void;
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 }
 
 export function StepBudget({ data, updateData }: StepBudgetProps) {

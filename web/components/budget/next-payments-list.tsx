@@ -66,11 +66,19 @@ export function NextPaymentsList({ payments }: NextPaymentsProps) {
                                         </div>
                                         <div className="text-right">
                                             <p className="font-bold text-gray-900">{formatCurrency(payment.amount)}</p>
+<<<<<<< HEAD
                                             <span className="text-xs text-text-secondary">
                                                 {payment.sequenceNumber && payment.totalInstallments
                                                     ? `Parc ${payment.sequenceNumber}/${payment.totalInstallments}`
                                                     : 'Pagamento'}
                                             </span>
+=======
+                                            {/* Assuming backend doesn't send "Parc 2/5" yet, just amount. 
+                                 Ideally update DTO if this is required, but schema doesn't link installments to total installments cleanly 
+                                 without traversing all installments. Keeping simple for now. 
+                             */}
+                                            <span className="text-xs text-text-secondary">Parcela</span>
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
                                         </div>
                                     </div>
                                 </CardContent>

@@ -17,6 +17,7 @@ export interface BudgetSummaryDTO {
         amount: number;
         dueDate: string; // ISO Date
         status: string;
+<<<<<<< HEAD
         sequenceNumber?: number;
         totalInstallments?: number;
     }[];
@@ -29,6 +30,14 @@ export async function getBudgetSummary(weddingId: string, token?: string): Promi
     const res = await fetch(`${API_URL}/budget/summary/${weddingId}`, {
         cache: 'no-store',
         headers
+=======
+    }[];
+}
+
+export async function getBudgetSummary(weddingId: string): Promise<BudgetSummaryDTO> {
+    const res = await fetch(`${API_URL}/budget/summary/${weddingId}`, {
+        cache: 'no-store',
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     });
 
     if (!res.ok) {

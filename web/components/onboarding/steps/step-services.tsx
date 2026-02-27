@@ -3,16 +3,26 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+<<<<<<< HEAD
 import { SetupWeddingPayload } from "@/lib/api/weddings.api";
 
+=======
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 export interface ServiceExpectedBudget {
     type: string;
     expectedValue: number;
 }
 
 interface StepServicesProps {
+<<<<<<< HEAD
     data: SetupWeddingPayload;
     updateData: (fields: Partial<SetupWeddingPayload>) => void;
+=======
+    data: {
+        services: ServiceExpectedBudget[];
+    };
+    updateData: (fields: Partial<StepServicesProps['data']>) => void;
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 }
 
 // Pre-defined popular categories 
@@ -34,21 +44,34 @@ const COMMON_SERVICES = [
 export function StepServices({ data, updateData }: StepServicesProps) {
 
     const handleToggleService = (serviceId: string, label: string) => {
+<<<<<<< HEAD
         const currentServices = data.services || [];
         const exists = currentServices.find(s => s.type === label);
         if (exists) {
             updateData({ services: currentServices.filter(s => s.type !== label) });
         } else {
             updateData({ services: [...currentServices, { type: label, expectedValue: 0 }] });
+=======
+        const exists = data.services.find(s => s.type === label);
+        if (exists) {
+            updateData({ services: data.services.filter(s => s.type !== label) });
+        } else {
+            updateData({ services: [...data.services, { type: label, expectedValue: 0 }] });
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
         }
     };
 
     const handleBudgetChange = (label: string, valueString: string) => {
         const unformatted = valueString.replace(/\D/g, '');
         const numericValue = parseInt(unformatted) || 0;
+<<<<<<< HEAD
         const currentServices = data.services || [];
 
         const newServices = currentServices.map(s =>
+=======
+
+        const newServices = data.services.map(s =>
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
             s.type === label ? { ...s, expectedValue: numericValue } : s
         );
         updateData({ services: newServices });
@@ -75,7 +98,11 @@ export function StepServices({ data, updateData }: StepServicesProps) {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar pb-10">
                 {COMMON_SERVICES.map((service) => {
+<<<<<<< HEAD
                     const isSelected = (data.services || []).find(s => s.type === service.label);
+=======
+                    const isSelected = data.services.find(s => s.type === service.label);
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 
                     return (
                         <div key={service.id} className="flex flex-col gap-2">

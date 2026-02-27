@@ -46,9 +46,13 @@ export function InstallmentList({ installments, vendorId }: InstallmentListProps
                                 <CardContent className="p-4 flex items-center justify-between">
                                     <div>
                                         <p className="text-xs uppercase tracking-wide text-text-secondary font-semibold mb-1">
+<<<<<<< HEAD
                                             {inst.sequenceNumber && inst.totalInstallments
                                                 ? `Parcela ${inst.sequenceNumber} de ${inst.totalInstallments}`
                                                 : `Parcela ${index + 1} de ${installments.length}`}
+=======
+                                            Parcela {index + 1} de {installments.length}
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
                                         </p>
                                         <p className="text-lg font-bold text-text-primary">{formatCurrency(inst.amount)}</p>
                                     </div>

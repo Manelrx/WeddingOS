@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+
 import { SetupWeddingDto } from './dto/setup-wedding.dto';
 import { VendorStage } from '@prisma/client';
 
@@ -61,7 +62,6 @@ export class WeddingsService {
                     }
                 },
             });
-
             if (setupDto.services && setupDto.services.length > 0) {
                 const vendorData = setupDto.services.map(service => ({
                     weddingId: wedding.id,

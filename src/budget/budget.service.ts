@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BudgetSummaryDto } from './dto/budget-summary.dto';
-import { VendorStage } from '@prisma/client';
+import { VendorStage, PaymentStatus } from '@prisma/client';
 
 @Injectable()
 export class BudgetService {
@@ -58,7 +58,7 @@ export class BudgetService {
         const nextInstallments = await this.prisma.installment.findMany({
             where: {
                 vendor: { weddingId },
-                paidAt: null
+                status: { not: PaymentStatus.PAGO }
             },
             include: {
                 vendor: {
@@ -70,14 +70,14 @@ export class BudgetService {
         });
 
         const nextPayments = nextInstallments.map(inst => {
-            const isOverdue = inst.dueDate < new Date();
+            const isOverdue = inst.dueDate < new Date() && inst.status !== PaymentStatus.PAGO;
             return {
                 id: inst.id,
                 vendorName: inst.vendor.name,
                 vendorId: inst.vendor.id,
                 amount: Number(inst.amount),
                 dueDate: inst.dueDate,
-                status: isOverdue ? 'ATRASADO' : 'EM_ABERTO',
+                status: isOverdue ? 'ATRASADO' : inst.status,
                 sequenceNumber: inst.sequenceNumber,
                 totalInstallments: inst.totalInstallments
             };

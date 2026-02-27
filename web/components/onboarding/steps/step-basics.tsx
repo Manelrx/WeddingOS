@@ -2,12 +2,22 @@
 
 import { Calendar } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
+<<<<<<< HEAD
 import { format } from "date-fns";
 import { SetupWeddingPayload } from "@/lib/api/weddings.api";
 
 interface StepBasicsProps {
     data: SetupWeddingPayload;
     updateData: (fields: Partial<SetupWeddingPayload>) => void;
+=======
+import { format } from "date-fns"; interface StepBasicsProps {
+    data: {
+        coupleNames: string;
+        eventDate: string;
+        guestCount: number;
+    };
+    updateData: (fields: Partial<StepBasicsProps['data']>) => void;
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 }
 
 export function StepBasics({ data, updateData }: StepBasicsProps) {

@@ -7,7 +7,10 @@ import { InstallmentList } from "@/components/vendors/financial/installment-list
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+<<<<<<< HEAD
 import { cookies } from "next/headers";
+=======
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 
 interface PageProps {
     params: Promise<{
@@ -18,12 +21,18 @@ interface PageProps {
 export default async function VendorFinancialPage({ params }: PageProps) {
     const { vendorId } = await params;
 
+<<<<<<< HEAD
     const cookieStore = await cookies();
     const token = cookieStore.get('weddingos_token')?.value;
 
     // Parallel data fetching
     const vendorData = getVendorById(vendorId, token);
     const financialData = getVendorFinancials(vendorId, token);
+=======
+    // Parallel data fetching
+    const vendorData = getVendorById(vendorId);
+    const financialData = getVendorFinancials(vendorId);
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 
     const [vendor, financial] = await Promise.all([vendorData, financialData]);
 

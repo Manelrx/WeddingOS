@@ -29,8 +29,13 @@ const CATEGORIES = [
         color: "bg-purple-50 text-purple-600",
     },
     {
+<<<<<<< HEAD
         id: "espaco",
         title: "Espaço",
+=======
+        id: "local",
+        title: "Local da cerimônia",
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
         subtitle: "Onde tudo acontece",
         icon: Church,
         color: "bg-emerald-50 text-emerald-600",

@@ -33,6 +33,7 @@ export async function setupWedding(payload: SetupWeddingPayload) {
         throw new Error(`Failed to setup wedding: ${res.statusText}`);
     }
 
+<<<<<<< HEAD
 }
 
 export async function getMyWedding(token?: string) {
@@ -62,5 +63,7 @@ export async function updateWeddingBudget(weddingId: string, totalBudget: number
         throw new Error('Failed to update total budget');
     }
 
+=======
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     return res.json();
 }

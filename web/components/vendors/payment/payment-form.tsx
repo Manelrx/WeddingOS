@@ -15,13 +15,20 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface PaymentFormProps {
+<<<<<<< HEAD
     weddingId: string;
+=======
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     vendorId: string;
     vendorName: string;
     installments: InstallmentDTO[];
 }
 
+<<<<<<< HEAD
 export function PaymentForm({ weddingId, vendorId, vendorName, installments }: PaymentFormProps) {
+=======
+export function PaymentForm({ vendorId, vendorName, installments }: PaymentFormProps) {
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     const router = useRouter();
     const searchParams = useSearchParams();
     const preSelectedInstallmentId = searchParams.get('installmentId');
@@ -54,11 +61,20 @@ export function PaymentForm({ weddingId, vendorId, vendorName, installments }: P
         setError(null);
 
         try {
+<<<<<<< HEAD
             await registerPayment({
                 weddingId,
                 vendorId,
                 amount: parseFloat(amount),
                 paidAt: date,
+=======
+            await registerPayment(vendorId, {
+                vendorId,
+                amount: parseFloat(amount),
+                dueDate: date, // Using payment date as due date if not linked? Or just paidAt.
+                paidAt: new Date().toISOString(), // Assuming immediate payment confirmation
+                status: 'PAGO',
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
                 paymentMethod: method || 'OUTRO',
                 installmentId: selectedInstallmentId || undefined,
             });

@@ -25,6 +25,7 @@ export class ComparisonService {
         if (normalized === 'buffet') categories.push('Buffet');
         if (normalized === 'fotografia') categories.push('Fotografia');
 
+
         // 1. Fetch Proposals
         const prismaWhere: any = {
             vendor: {

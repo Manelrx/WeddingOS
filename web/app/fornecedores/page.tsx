@@ -15,6 +15,7 @@ interface VendorsPageProps {
 }
 
 export default async function VendorsPage({ searchParams }: VendorsPageProps) {
+<<<<<<< HEAD
     const params = await searchParams;
 
     const cookieStore = await cookies();
@@ -23,6 +24,11 @@ export default async function VendorsPage({ searchParams }: VendorsPageProps) {
     if (!token) {
         redirect("/login");
     }
+=======
+    // Temporary hardcoded ID as per instructions
+    const weddingId = "857cfa73-9305-4b00-84e2-7746eed73ab8";
+    const params = await searchParams;
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
 
     let vendors: Awaited<ReturnType<typeof getVendorsByWedding>> = [];
     try {

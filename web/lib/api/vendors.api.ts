@@ -4,16 +4,23 @@ import { VendorDetail } from '@/types/vendor.types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
+<<<<<<< HEAD
 export async function getVendorsByWedding(weddingId: string, serviceType?: string, token?: string): Promise<VendorSummary[]> {
+=======
+export async function getVendorsByWedding(weddingId: string, serviceType?: string): Promise<VendorSummary[]> {
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
     try {
         const url = new URL(`${API_URL}/weddings/${weddingId}/vendors`);
         if (serviceType) {
             url.searchParams.append('serviceType', serviceType);
         }
 
+<<<<<<< HEAD
         const headers: Record<string, string> = {};
         if (token) headers['Cookie'] = `weddingos_token=${token}`;
 
+=======
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
         const res = await fetch(url.toString(), {
             cache: 'no-store',
             headers

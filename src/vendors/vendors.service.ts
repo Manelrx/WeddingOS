@@ -42,6 +42,7 @@ export class VendorsService {
         }
     }
 
+<<<<<<< HEAD
     async findAll(weddingId: string, userId: string, serviceType?: string) {
         try {
             const wedding = await this.prisma.wedding.findFirst({
@@ -66,6 +67,13 @@ export class VendorsService {
                     in: categories,
                     mode: 'insensitive',
                 };
+=======
+    async findAll(weddingId: string, serviceType?: string) {
+        try {
+            const whereClause: any = { weddingId };
+            if (serviceType) {
+                whereClause.serviceType = serviceType;
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
             }
 
             const vendors = await this.prisma.vendor.findMany({
@@ -244,6 +252,7 @@ export class VendorsService {
             where: { id },
         });
     }
+<<<<<<< HEAD
     async promoteToNegotiation(vendorId: string, proposalId: string, userId: string) {
         // 1. Validate
         const vendor = await this.prisma.vendor.findFirst({
@@ -251,6 +260,12 @@ export class VendorsService {
                 id: vendorId,
                 wedding: { members: { some: { userId } } }
             },
+=======
+    async promoteToNegotiation(vendorId: string, proposalId: string) {
+        // 1. Validate
+        const vendor = await this.prisma.vendor.findUnique({
+            where: { id: vendorId },
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
             include: { proposals: true }
         });
         if (!vendor) throw new NotFoundException(`Vendor ${vendorId} not found`);
@@ -274,6 +289,7 @@ export class VendorsService {
         return updatedVendor;
     }
 
+<<<<<<< HEAD
     async analyzeProposal(proposalId: string, userId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
         const proposal = await this.prisma.proposal.findFirst({
             where: {
@@ -284,6 +300,9 @@ export class VendorsService {
 
         if (!proposal) throw new NotFoundException(`Proposta não encontrada ou acesso negado.`);
 
+=======
+    async analyzeProposal(proposalId: string, context: 'proposal' | 'contract' | 'negotiation' = 'proposal') {
+>>>>>>> 4bbbe46cb8db37f481a16d5b134bc4c1ae9e0208
         return this.proposalsService.analyze(proposalId, context);
     }
 }
